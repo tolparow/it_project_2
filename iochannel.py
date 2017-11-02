@@ -12,6 +12,7 @@ def get_str(file_path):
     with open(file_path, 'r') as f:
         return f.read()
 
+
 #add noise to message
 def make_some_noise(message, noise_level = 0.0, is_string=False):
     assert(noise_level >= 0 and noise_level <= 1), ("Wrong value of noise_level! " + str(noise_level) + " not in [0;1]  ")
@@ -36,7 +37,8 @@ def make_some_noise(message, noise_level = 0.0, is_string=False):
         set_of_bytes[index] = tmp
     return set_of_bytes
 
-def write_to_file(content, file_name = "output.txt", is_string = False):
+
+def write_file(content, file_name = "output.txt", is_string = False):
     if is_string:
         with open(file_name, 'w') as f:
             f.write(content)
@@ -44,15 +46,18 @@ def write_to_file(content, file_name = "output.txt", is_string = False):
         with open(file_name, 'wb') as f:
             f.write(content)
 
+
 #Write bytes and swipes some their bits with probability of swap @noise_level
 #to file with name @file_name
 def write_bytes_with_noise(bytes, file_name = "output.txt", noise_level = 0.0):
     write_to_file(make_some_noise(bytes,noise_level), file_name)
 
+
 #Write string and swipes some their bits with probability of swap @noise_level
 #to file with name @file_name
 def write_string_with_noise(string, file_name = "output.txt", noise_level = 0.0):
     write_to_file(make_some_noise(string, noise_level, is_string=True), file_name)
+
 
 #Find number of bits which are different in two objects of type bytes()
 def count_difference_bytes(original, received):
@@ -67,6 +72,8 @@ def count_difference_bytes(original, received):
             b1 >>= 1
             b2 >>= 1
     return count
+
+
 #Find number of bits which are different in two files with paths @file1, @file2
 def count_difference_files(file1, file2):
     bytes1 = get_bytes(file1, is_file=True)
