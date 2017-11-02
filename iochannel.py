@@ -4,7 +4,6 @@ def get_bytes(obj, is_file=False):
     if is_file:
         with open(obj, 'rb') as f:
             return f.read()
-
     assert isinstance(obj, str), 'The object is neither string nor file path!'
     return bytes(obj, 'utf-8')
 
@@ -14,12 +13,8 @@ def get_str(file_path):
         return f.read()
 
 def make_some_noize(bytes, noize_level = 0.0, is_string=False):
-    print ("\nin function >> ")
     assert(noize_level >= 0 and noize_level <= 1), ("Wrong value of noize_level! " + str(noize_level) + " not in [0;1]  ")
-
-
     set_of_bytes = bytearray()
-
     if is_string:
         set_of_bytes = bytearray(bytes, 'utf-8')
     else:
@@ -27,12 +22,10 @@ def make_some_noize(bytes, noize_level = 0.0, is_string=False):
 
     for index, byte in enumerate(set_of_bytes):  #for every byte
         tmp = 0
-        print(byte)
         b = byte
         for i in range(8): #for every bit
             tmp >>= 1
             if random.random() < noize_level:
-                print("Randomed")
                 #reverse
                 tmp += 128 * (1 - b & 1)
             else:
@@ -43,8 +36,6 @@ def make_some_noize(bytes, noize_level = 0.0, is_string=False):
     return set_of_bytes
 
 def write_to_file(content, file_name = "output.txt", is_string = False):
-    print(content)
-
     if is_string:
         with open(file_name, 'w') as f:
             f.write(content)
