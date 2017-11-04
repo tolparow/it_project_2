@@ -11,34 +11,31 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
 
-    <title>Sign up</title>
+    <title>Restore password</title>
 </head>
 <body>
 <div class="container login">
     <div class="row">
         <div class="col-12 col-sm-8 offset-sm-2 col-md-6 offset-md-3 col-xl-6 offset-xl-3 auth-container">
             <div class="auth-form">
-                <div class="unlock" style="background-image: url({% static 'img/signup.svg' %})"></div>
+                <div class="unlock" style="background-image: url({% static 'img/restore.svg' %})"></div>
                 <h1 class="title">
-                    Sign up
+                    Restore password
                 </h1>
                 <form method="post">
                     <div class="col-12">
                         <input type="text" placeholder="Username" class="username" name="username">
                     </div>
                     <div class="col-12">
-                        <input type="password" placeholder="Password" class="password" name="password">
+                        <input type="password" placeholder="New password" class="password" name="password">
                     </div>
                     <div class="col-12">
                         <input type="password" placeholder="Repeat password" class="password" name="password-repeat">
                     </div>
                     <div class="col-12">
                         <button class="login-btn btn btn-default">
-                            Sign up
+                            Restore
                         </button>
-                    </div>
-                    <div class="col-12">
-                        <p class="links">Already have account? <a href={% url 'login' %}>Log in!</a></p>
                     </div>
                 </form>
             </div>

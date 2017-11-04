@@ -67,6 +67,9 @@ def login_view(request):
 
     return TemplateResponse(request, 'www/profiles/login.html', context)
 
+@csrf_protect
+def restore_view(request):
+    return TemplateResponse(request, 'www/profiles/restore.html')
 
 def logout_view(request):
     logout(request)
