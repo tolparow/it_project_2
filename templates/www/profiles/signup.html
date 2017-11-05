@@ -23,14 +23,15 @@
                     Sign up
                 </h1>
                 <form method="post">
+                    {% csrf_token %}
                     <div class="col-12">
                         <input type="text" placeholder="Username" class="username" name="username">
                     </div>
                     <div class="col-12">
-                        <input type="password" placeholder="Password" class="password" name="password">
+                        <input type="password" placeholder="Password" class="password" name="password1">
                     </div>
                     <div class="col-12">
-                        <input type="password" placeholder="Repeat password" class="password" name="password-repeat">
+                        <input type="password" placeholder="Repeat password" class="password" name="password2">
                     </div>
                     <div class="col-12">
                         <button class="login-btn btn btn-default">

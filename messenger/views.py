@@ -16,13 +16,18 @@ def messages_view(request):
     return HttpResponseRedirect(reverse('login'))
 
 
-def chat_view(request, peer_id):
-    user = request.user
-    if user.is_authenticated:
-        context = {
-            'host_user': request.user,
-            'chat': models.Chat.objects.get(host=user, peer=peer_id),
-        }
+# def chat_view(request, peer_id):
+#     user = request.user
+#     if user.is_authenticated:
+#         context = {
+#             'host_user': request.user,
+#             'chat': models.Chat.objects.get(host=user, peer=peer_id),
+#         }
+#
+#         return TemplateResponse(request, 'www/messenger/chat.html', context)
+#     return HttpResponseRedirect(reverse('login'))
 
-        return TemplateResponse(request, 'www/messenger/chat.html', context)
-    return HttpResponseRedirect(reverse('login'))
+
+# Only for testing
+def chat_view(request):
+    return TemplateResponse(request, 'www/messenger/chat.html')

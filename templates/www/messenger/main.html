@@ -1,10 +1,56 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href={% static 'css/main.css' %}>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
+
+    <title>Chats</title>
 </head>
 <body>
+<nav class="header navbar navbar-fixed-top">
+    <span class="back" style="background-image: url('{% static 'img/back.svg' %}')">
 
+    </span>
+    <a class="navbar-right friend" href="">Messages</a>
+</nav>
+<div class="col-12 chats">
+    <div class="row search-wrapper">
+        <input class="form-control search" placeholder="Search for chats...">
+    </div>
+    <div class="list">
+{#        {% include "../templates/www/blocks/chat.html" %}#}
+        <div class="row chat">
+            <div class="avatar"></div>
+            <div class="content">
+                <p class="chat-name">
+                    Svetlana Petrova
+                </p>
+                <p class="chat-msg">
+                    Message here message here message here message here message here message here here message here
+                    message here message here message here
+                    here message here message here message here
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="footer navbar">
+
+</div>
 </body>
+<script>
+    var options = {
+        valueNames: ['chat-name']
+    };
+
+    var opList = new List('chats', options);
+</script>
 </html>

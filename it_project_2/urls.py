@@ -21,8 +21,9 @@ from django.contrib import admin
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', m_views.messages_view, name='home'),
+    url(r'^chat$', m_views.chat_view, name='chat'),
     url(r'^signup$', p_views.signup_view, name='signup'),
     url(r'^login$', p_views.login_view, name='login'),
-    url(r'^resore', p_views.restore_view, name='restore'),
+    url(r'^restore', p_views.restore_view, name='restore'),
     url(r'^logout$', p_views.logout_view, name='logout'),
 ]

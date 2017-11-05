@@ -23,6 +23,7 @@
                     Login
                 </h1>
                 <form method="post">
+                    {% csrf_token %}
                     <div class="col-12">
                         <input type="text" placeholder="Username" class="username" name="username">
                     </div>

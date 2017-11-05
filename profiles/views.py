@@ -20,7 +20,7 @@ def signup_view(request):
         form = RegistrationForm(data=request.POST)
         if form.is_valid():
             user = form.save()
-            return HttpResponseRedirect(reverse('confirm_your_email'))
+            return HttpResponseRedirect(reverse('login'))
     elif request.user.is_authenticated:
         return HttpResponseRedirect(reverse('home'))
 
@@ -50,13 +50,13 @@ def login_view(request):
         username = request.POST.get("username", "")
         user = authenticate(username=username, password=password)
         if user is not None:
-            if user.email_confirmed:
+            # if user.email_confirmed:
                 login(request, user)
                 if not request.POST.get('remember', None):
                     request.session.set_expiry(0)
                 return HttpResponseRedirect(reverse('home'))
-            else:
-                email_not_confirmed = True
+            # else:
+            #     email_not_confirmed = True
         else:
             form_valid = False
 
