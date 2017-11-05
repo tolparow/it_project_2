@@ -13,7 +13,9 @@ class Chat(models.Model):
             .filter(decompressed=True).order_by('timestamp')
 
     def last_message(self):
-        return self.messages()[-1]
+        return Message.objects \
+            .filter(Q(sender=self.host, receiver=self.peer) | Q(sender=self.peer, receiver=self.host)) \
+            .filter(decompressed=True).order_by('-timestamp')[0]
 
 
 class Message(models.Model):
