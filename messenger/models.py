@@ -20,6 +20,10 @@ class Chat(models.Model):
         except:
             return None
 
+    def __str__(self):
+        return str(self.host) + ' ' + str(self.peer)
+
+
 class Message(models.Model):
     sender = models.ForeignKey(get_user_model(), related_name='senders')
     receiver = models.ForeignKey(get_user_model(), related_name='receivers')
@@ -38,3 +42,20 @@ class Message(models.Model):
 
     decompressed = models.BooleanField(default=False)
     new = models.BooleanField(default=True)
+
+    def save(self, *args, **kwargs):
+        try:
+            chat_1 = Chat(host=self.sender, peer=self.receiver)
+            chat_1.save()
+        except:
+            pass
+        try:
+            chat_2 = Chat(host=self.receiver, peer=self.sender)
+            chat_2.save()
+        except:
+            pass
+
+        super(Message, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return str(self.sender) + ' -> ' + str(self.receiver) + ' at ' + str(self.timestamp)
