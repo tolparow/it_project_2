@@ -19,70 +19,9 @@
     <a class="navbar-right friend" href="">Ivan Ivanov</a>
 </nav>
 <div class="col-12 single-chat" id="scroll-bot">
-    <div class="row">
-        <div class="message from">
-            <p>Hi how are u?</p>
-            <span class="msg-time">20:09</span>
-        </div>
-    </div>
-    <div class="row msg-row">
-        <div class="wrapper">
-            <div class="message to">
-                <p>Message here message here</p>
-                <span class="msg-time">21:00</span>
-            </div>
-        </div>
-    </div>
-    <div class="row msg-row">
-        <div class="message to">
-            <p>Message here message here message here message here message here message here message here
-                message
-                here message here
-                message here message here message here message here</p>
-            <span class="msg-time">21:43</span>
-        </div>
-    </div>
-    <div class="row msg-row">
-        <div class="message to">
-            <p>Message here message here message here message here message here message here message here
-                message
-                here message here
-                message here message here message here message here</p>
-            <span class="msg-time">21:50</span>
-        </div>
-    </div>
-    <div class="row">
-        <div class="message from">
-            <p>Message here message here message here message here message here message here message here
-                message
-                here message here
-                message here message here message here message here</p>
-            <span class="msg-time">22:00</span>
-        </div>
-    </div>
-    <div class="row msg-row">
-        <div class="message to">
-            <p>Message here message here message here message here message here message here message here
-                message</p>
-            <span class="msg-time">22:03</span>
-        </div>
-    </div>
-    <div class="row">
-        <div class="message from">
-            <p>Message here message here message here message here message here message here message here
-                message
-                here message here
-                message here message here message here message here</p>
-            <span class="msg-time">22:00</span>
-        </div>
-    </div>
-    <div class="row msg-row">
-        <div class="message to">
-            <p>Message here message here message here message here message here message here message here
-                message</p>
-            <span class="msg-time">22:03</span>
-        </div>
-    </div>
+    {% for message in messages %}
+        {% include "www/blocks/message.html" %}
+    {% endfor %}
 </div>
 <div class="footer navbar">
     <button class="attach">Attach</button>

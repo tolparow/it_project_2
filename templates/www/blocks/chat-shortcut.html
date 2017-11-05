@@ -4,12 +4,10 @@
         <div class="avatar"></div>
         <div class="content">
             <p class="chat-name">
-                Ivan Petrov
+                {{ chat.peer }}
             </p>
             <p class="chat-msg">
-                Message here message here message here message here message here message here here message here
-                message here message here message here
-                here message here message here message here
+                {{ chat.last_message|truncatechars:40 }}
             </p>
         </div>
     </div>
