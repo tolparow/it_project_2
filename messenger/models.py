@@ -13,10 +13,12 @@ class Chat(models.Model):
             .filter(decompressed=True).order_by('timestamp')
 
     def last_message(self):
-        return Message.objects \
-            .filter(Q(sender=self.host, receiver=self.peer) | Q(sender=self.peer, receiver=self.host)) \
-            .filter(decompressed=True).order_by('-timestamp')[0]
-
+        try:
+            return Message.objects \
+                .filter(Q(sender=self.host, receiver=self.peer) | Q(sender=self.peer, receiver=self.host)) \
+                .filter(decompressed=True).order_by('-timestamp')[0]
+        except:
+            return None
 
 class Message(models.Model):
     sender = models.ForeignKey(get_user_model(), related_name='senders')
