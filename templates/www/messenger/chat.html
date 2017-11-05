@@ -15,9 +15,7 @@
 </head>
 <body>
 <nav class="header navbar navbar-fixed-top">
-    <span class="back" style="background-image: url('{% static 'img/back.svg' %}')">
-
-    </span>
+    <a href="{% url 'home' %}" class="back" style="background-image: url('{% static 'img/back.svg' %}')"></a>
     <a class="navbar-right friend" href="">Ivan Ivanov</a>
 </nav>
 <div class="col-12 single-chat" id="scroll-bot">
@@ -28,9 +26,11 @@
         </div>
     </div>
     <div class="row msg-row">
-        <div class="message to">
-            <p>Message here message here</p>
-            <span class="msg-time">21:00</span>
+        <div class="wrapper">
+            <div class="message to">
+                <p>Message here message here</p>
+                <span class="msg-time">21:00</span>
+            </div>
         </div>
     </div>
     <div class="row msg-row">
