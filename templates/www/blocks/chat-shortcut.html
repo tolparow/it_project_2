@@ -7,7 +7,7 @@
                 {{ chat.peer }}
             </p>
             <p class="chat-msg">
-                {{ chat.last_message|truncatechars:40 }}
+                {{ chat.last_message.text|truncatechars:40 }}
             </p>
         </div>
     </div>

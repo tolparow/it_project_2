@@ -19,7 +19,7 @@
     <a class="navbar-right friend" href="">Ivan Ivanov</a>
 </nav>
 <div class="col-12 single-chat" id="scroll-bot">
-    {% for message in messages %}
+    {% for message in chat.messages %}
         {% include "www/blocks/message.html" %}
     {% endfor %}
 </div>
