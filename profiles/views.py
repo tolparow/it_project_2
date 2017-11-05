@@ -51,10 +51,10 @@ def login_view(request):
         user = authenticate(username=username, password=password)
         if user is not None:
             # if user.email_confirmed:
-                login(request, user)
-                if not request.POST.get('remember', None):
-                    request.session.set_expiry(0)
-                return HttpResponseRedirect(reverse('home'))
+            login(request, user)
+            if not request.POST.get('remember', None):
+                request.session.set_expiry(0)
+            return HttpResponseRedirect(reverse('home'))
             # else:
             #     email_not_confirmed = True
         else:
@@ -67,9 +67,11 @@ def login_view(request):
 
     return TemplateResponse(request, 'www/profiles/login.html', context)
 
+
 @csrf_protect
 def restore_view(request):
     return TemplateResponse(request, 'www/profiles/restore.html')
+
 
 def logout_view(request):
     logout(request)

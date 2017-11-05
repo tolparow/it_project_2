@@ -12,6 +12,9 @@ class Chat(models.Model):
             .filter(Q(sender=self.host, receiver=self.peer) | Q(sender=self.peer, receiver=self.host)) \
             .filter(decompressed=True).order_by('timestamp')
 
+    def last_message(self):
+        pass
+
 
 class Message(models.Model):
     sender = models.ForeignKey(get_user_model(), related_name='senders')
@@ -19,7 +22,7 @@ class Message(models.Model):
 
     text = models.TextField(max_length=1025)
 
-    file = models.FileField(null=True)
+    file = models.FileField(null=True, blank=True, default=None)
 
     encryption_method = models.CharField(max_length=17)
     compression_method = models.CharField(max_length=17)

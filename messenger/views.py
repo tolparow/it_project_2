@@ -1,5 +1,7 @@
 from django.template.response import TemplateResponse
 from django.http import HttpResponseRedirect
+from django.views.decorators.csrf import csrf_exempt
+
 import messenger.models as models
 from django.urls import reverse
 
@@ -16,18 +18,18 @@ def messages_view(request):
     return HttpResponseRedirect(reverse('login'))
 
 
-# def chat_view(request, peer_id):
-#     user = request.user
-#     if user.is_authenticated:
-#         context = {
-#             'host_user': request.user,
-#             'chat': models.Chat.objects.get(host=user, peer=peer_id),
-#         }
-#
-#         return TemplateResponse(request, 'www/messenger/chat.html', context)
-#     return HttpResponseRedirect(reverse('login'))
+def chat_view(request, chat_id):
+    user = request.user
+    if user.is_authenticated:
+        context = {
+            'host_user': request.user,
+            'chat': models.Chat.objects.get(pk=chat_id),
+        }
+
+        return TemplateResponse(request, 'www/messenger/chat.html', context)
+    return HttpResponseRedirect(reverse('login'))
 
 
-# Only for testing
-def chat_view(request):
-    return TemplateResponse(request, 'www/messenger/chat.html')
+@csrf_exempt
+def ajax_changes_view(request):
+    pass
