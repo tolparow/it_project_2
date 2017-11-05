@@ -45,15 +45,16 @@ class Message(models.Model):
 
     def save(self, *args, **kwargs):
         try:
+            chat_1 = Chat.objects.get(host=self.sender, peer=self.receiver)
+        except:
             chat_1 = Chat(host=self.sender, peer=self.receiver)
             chat_1.save()
-        except:
-            pass
+
         try:
+            chat_2 = Chat.objects.get(host=self.receiver, peer=self.sender)
+        except:
             chat_2 = Chat(host=self.receiver, peer=self.sender)
             chat_2.save()
-        except:
-            pass
 
         super(Message, self).save(*args, **kwargs)
 
