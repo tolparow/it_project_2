@@ -25,18 +25,19 @@
 </div>
 <div class="footer navbar">
     <button class="attach">Attach</button>
-    <textarea data-autoresize rows="1" class="send-message"></textarea>
+    <textarea placeholder="Enter your message here" data-autoresize rows="1" class="send-message"></textarea>
     <button class="send">Send</button>
 </div>
 </body>
 <script>
     $(".send").click(function () {
-        var url = "";
-        console.log($(".send-message").val() + " from " + {{ chat.peer.pk }});
+        var input = ".send-message";
+        console.log($(input).val() + " from " + {{ chat.peer.pk }});
         $.ajax({
             type: "POST",
-            data: "{'message':'" + $(".send-message").val() + "', 'sender':'" + {{ chat.peer.pk }} + "'}"
+            data: {message: $(input).val()}
         });
+        $(input).val("");
     });
     var objDiv = document.getElementById("scroll-bot");
     objDiv.scrollTop = objDiv.scrollHeight;
