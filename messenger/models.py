@@ -43,13 +43,16 @@ class Message(models.Model):
     decompressed = models.BooleanField(default=False)
     new = models.BooleanField(default=True)
 
+    def time(self):
+        return self.timestamp.time()
+
     def save(self, *args, **kwargs):
         try:
             chat_1 = Chat.objects.get(host=self.sender, peer=self.receiver)
         except:
             chat_1 = Chat(host=self.sender, peer=self.receiver)
             chat_1.save()
-            
+
         try:
             chat_2 = Chat.objects.get(host=self.receiver, peer=self.sender)
         except:
