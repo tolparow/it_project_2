@@ -27,9 +27,17 @@ def chat_view(request: WSGIRequest, chat_id):
         return HttpResponseForbidden()
 
     if user.is_authenticated:
+
+        context = {
+            'host_user': request.user,
+            'chat': chat,
+        }
+
         if request.is_ajax():
             msg_text = request.POST.get('message')
-            print(msg_text, request.POST)
+            if msg_text is None:
+                return TemplateResponse(request, 'www/blocks/chat-messages.html', context)
+
             msg = models.Message(
                 sender=user,
                 receiver=chat.peer,
@@ -41,13 +49,7 @@ def chat_view(request: WSGIRequest, chat_id):
                 decompressed=True,
             )
             msg.save()
-            print('lagksk')
             return HttpResponse('ok')
-
-        context = {
-            'host_user': request.user,
-            'chat': chat,
-        }
 
         return TemplateResponse(request, 'www/messenger/chat.html', context)
     return HttpResponseRedirect(reverse('login'))
