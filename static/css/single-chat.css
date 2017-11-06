@@ -67,17 +67,17 @@
 }
 
 /*.send-message {*/
-    /*width: 100%;*/
-    /*position: absolute;*/
-    /*bottom: 15px;*/
+/*width: 100%;*/
+/*position: absolute;*/
+/*bottom: 15px;*/
 /*}*/
-
 
 .message-entity {
     margin: 15px;
 }
 
 .message {
+    min-width: 80px;
     font-size: 14px;
     border-radius: 15px;
     box-shadow: 0 0 10px rgba(133, 133, 133, 0.5);
@@ -177,7 +177,7 @@ textarea {
 }
 
 .msg-row {
-
+    position: relative;
 }
 
 .wrapper {

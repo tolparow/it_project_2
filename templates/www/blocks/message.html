@@ -1,6 +1,6 @@
 <div class="row msg-row">
     <div class="wrapper">
-        <div class="message {% if host_user.pk == message.sender.pk %} from {% else %} to {% endif %}">
+        <div class="message {% if host_user.pk != message.sender.pk %} from {% else %} to {% endif %}">
             <p>{{ message.text }}</p>
             <span class="msg-time">21:00</span>
         </div>

@@ -18,7 +18,9 @@
     <a href="{% url 'home' %}" class="back" style="background-image: url('{% static 'img/back.svg' %}')"></a>
     <a class="navbar-right friend" href="">{{ chat.peer }}</a>
 </nav>
-{% include "www/blocks/chat-messages.html" %}
+<div class="col-12 single-chat" id="single-chat">
+    {% include "www/blocks/chat-messages.html" %}
+</div>
 <div class="footer navbar">
     <button class="attach">Attach</button>
     <textarea placeholder="Enter your message here" data-autoresize rows="1" class="send-message"></textarea>
@@ -34,12 +36,23 @@
             data: {message: $(input).val()}
         });
         $(input).val("");
-        $('.single-chat').load(document.URL +  ' .single-chat');
+
+    });
+    {#    $(".message.to").each(function () {#}
+    {#        $(this).css({left: $(this).parent().width() - $(this).width() - 30});#}
+    {#        console.log($(this).width());#}
+    {#    });#}
+    $(document).ready(function () {
+
+        setInterval(function () {
+            $('#single-chat').load(document.URL + ' #messages');
+            console.log("Updated");
+            var objDiv = $(".single-chat");
+            objDiv.scrollTop = objDiv.scrollHeight;
+        }, 1000);
     });
 
-
-
-    var objDiv = document.getElementById("scroll-bot");
+    var objDiv = $(".single-chat");
     objDiv.scrollTop = objDiv.scrollHeight;
 </script>
 </html>
