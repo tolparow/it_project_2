@@ -38,7 +38,11 @@
             data: {message: $(input).val()}
         });
         $(input).val("");
+        $('.single-chat').load(document.URL +  ' .single-chat');
     });
+
+
+
     var objDiv = document.getElementById("scroll-bot");
     objDiv.scrollTop = objDiv.scrollHeight;
 </script>

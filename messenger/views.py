@@ -29,10 +29,11 @@ def chat_view(request: WSGIRequest, chat_id):
     if user.is_authenticated:
         if request.is_ajax():
             msg_text = request.POST.get('message')
+            print(msg_text, request.POST)
             msg = models.Message(
                 sender=user,
                 receiver=chat.peer,
-                text=msg_text.strip(),
+                text=msg_text,
                 encryption_method='no',
                 compression_method='no',
                 loss_rate=0,

@@ -32,7 +32,7 @@
 }
 
 .header {
-    z-index: 100%;
+    z-index: 100;
     position: fixed;
     top: 0;
     width: 100%;
@@ -82,14 +82,14 @@
     border-radius: 15px;
     box-shadow: 0 0 10px rgba(133, 133, 133, 0.5);
     padding: 10px;
-    max-width: 70%;
+    max-width: 50%;
     margin: 15px 0 15px;
 }
 
 .message.to {
     background-color: rgba(173, 255, 47, 0.55);
     position: relative;
-    left: calc(30% - 15px);
+    left: calc(50% - 15px);
 }
 
 .message.from {
