@@ -49,7 +49,7 @@ class Message(models.Model):
         except:
             chat_1 = Chat(host=self.sender, peer=self.receiver)
             chat_1.save()
-
+            
         try:
             chat_2 = Chat.objects.get(host=self.receiver, peer=self.sender)
         except:

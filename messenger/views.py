@@ -1,7 +1,7 @@
+from django.core.handlers.wsgi import WSGIRequest
+from django.http import HttpResponseRedirect, HttpResponse, HttpResponseForbidden
 from django.template.response import TemplateResponse
-from django.http import HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
-
 import messenger.models as models
 from django.urls import reverse
 
@@ -18,12 +18,34 @@ def messages_view(request):
     return HttpResponseRedirect(reverse('login'))
 
 
-def chat_view(request, chat_id):
+@csrf_exempt
+def chat_view(request: WSGIRequest, chat_id):
     user = request.user
+    chat = models.Chat.objects.get(pk=chat_id)
+
+    if chat.host != user:
+        return HttpResponseForbidden()
+
     if user.is_authenticated:
+        if request.is_ajax():
+            msg_text = request.POST.get('message')
+            msg = models.Message(
+                sender=user,
+                receiver=chat.peer,
+                text=msg_text.strip(),
+                encryption_method='no',
+                compression_method='no',
+                loss_rate=0,
+                compression_rate=0,
+                decompressed=True,
+            )
+            msg.save()
+            print('lagksk')
+            return HttpResponse('ok')
+
         context = {
             'host_user': request.user,
-            'chat': models.Chat.objects.get(pk=chat_id),
+            'chat': chat,
         }
 
         return TemplateResponse(request, 'www/messenger/chat.html', context)
