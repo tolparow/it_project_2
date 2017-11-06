@@ -18,11 +18,7 @@
     <a href="{% url 'home' %}" class="back" style="background-image: url('{% static 'img/back.svg' %}')"></a>
     <a class="navbar-right friend" href="">{{ chat.peer }}</a>
 </nav>
-<div class="col-12 single-chat" id="scroll-bot">
-    {% for message in chat.messages %}
-        {% include "www/blocks/message.html" %}
-    {% endfor %}
-</div>
+{% include "www/blocks/chat-messages.html" %}
 <div class="footer navbar">
     <button class="attach">Attach</button>
     <textarea placeholder="Enter your message here" data-autoresize rows="1" class="send-message"></textarea>
@@ -38,7 +34,7 @@
             data: {message: $(input).val()}
         });
         $(input).val("");
-        $('.single-chat').load(document.URL +  ' .single-chat');
+{#        $('.single-chat').load(document.URL +  ' .single-chat');#}
     });
 
 
