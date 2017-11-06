@@ -16,9 +16,7 @@
 </head>
 <body>
 <nav class="header navbar navbar-fixed-top">
-    <span class="back" style="background-image: url('{% static 'img/back.svg' %}')">
-
-    </span>
+    <a href="{% url 'logout' %}" class="back" style="background-image: url('{% static 'img/back.svg' %}')"></a>
     <a class="navbar-right friend" href="">Messages</a>
 </nav>
 <div class="col-12 chats">

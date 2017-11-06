@@ -16,7 +16,7 @@
 <body>
 <nav class="header navbar navbar-fixed-top">
     <a href="{% url 'home' %}" class="back" style="background-image: url('{% static 'img/back.svg' %}')"></a>
-    <a class="navbar-right friend" href="">Ivan Ivanov</a>
+    <a class="navbar-right friend" href="">{{ chat.peer }}</a>
 </nav>
 <div class="col-12 single-chat" id="scroll-bot">
     {% for message in chat.messages %}
@@ -30,16 +30,14 @@
 </div>
 </body>
 <script>
-    {#    jQuery.each(jQuery('textarea[data-autoresize]'), function () {#}
-    {#        var offset = this.offsetHeight - this.clientHeight;#}
-    {##}
-    {#        var resizeTextarea = function (el) {#}
-    {#            jQuery(el).css('height', 'auto').css('height', el.scrollHeight + offset);#}
-    {#        };#}
-    {#        jQuery(this).on('keyup input', function () {#}
-    {#            resizeTextarea(this);#}
-    {#        }).removeAttr('data-autoresize');#}
-    {#    });#}
+    $(".send").click(function () {
+        var url = "";
+        console.log($(".send-message").val() + " from " + {{ chat.peer.pk }});
+        $.ajax({
+            type: "POST",
+            data: "{'message':'" + $(".send-message").val() + "', 'sender':'" + {{ chat.peer.pk }} + "'}"
+        });
+    });
     var objDiv = document.getElementById("scroll-bot");
     objDiv.scrollTop = objDiv.scrollHeight;
 </script>
