@@ -7,12 +7,14 @@ import messenger.models as models
 from django.urls import reverse
 
 
-def messages_view(request):
+def chats_view(request):
     user = request.user
+
     if user.is_authenticated:
         context = {
             'host_user': request.user,
             'chats': models.Chat.objects.filter(host=user),
+            'users': get_user_model().objects.all(),
         }
 
         return TemplateResponse(request, 'www/messenger/main.html', context)

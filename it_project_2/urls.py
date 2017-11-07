@@ -20,7 +20,7 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^$', m_views.messages_view, name='home'),
+    url(r'^$', m_views.chats_view, name='home'),
     url(r'^chat(?P<peer_id>[\d]+)$', m_views.chat_view, name='chat'),
     url(r'^signup$', p_views.signup_view, name='signup'),
     url(r'^login$', p_views.login_view, name='login'),
