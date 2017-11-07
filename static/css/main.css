@@ -172,3 +172,17 @@ a, a:hover, a:focus {
     top: 21px;
     right: 20px;
 }
+
+.dropdown-toggle {
+    cursor: pointer;
+    width: 100%;
+    background-color: var(--main-theme-color);
+}
+
+.dropdown-item, .dropdown-menu {
+    width: 100%;
+}
+
+.form-control.search {
+    margin-bottom: 15px;
+}
