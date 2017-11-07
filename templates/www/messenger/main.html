@@ -42,6 +42,8 @@
         <div class="col-12">
             {% for chat in chats %}
                 {% include "www/blocks/chat-shortcut.html" %}
+            {% empty %}
+                <p style="text-align: center">No chats yet</p>
             {% endfor %}
         </div>
     </div>
