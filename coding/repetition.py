@@ -55,11 +55,11 @@ def encode(message, mult = 3, is_string=True):
 
 
 
-kek = code("kek")
-# print(kek)
-
-decoded = encode(kek, is_string=False)
-print(decoded)
+# kek = code("kek")
+# # print(kek)
+#
+# decoded = encode(kek, is_string=False)
+# print(decoded)
 
 
 # bytes = io.get_bytes("input.txt", is_file=True)
