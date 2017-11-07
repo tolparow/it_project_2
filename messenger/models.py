@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
-from django.db import models
+from django.utils import timezone
 from django.db.models import Q
+from django.db import models
 
 
 class Chat(models.Model):
@@ -44,7 +45,8 @@ class Message(models.Model):
     new = models.BooleanField(default=True)
 
     def time(self):
-        return self.timestamp.time()
+        timezone.localtime()
+        return timezone.localtime(self.timestamp).time()
 
     def save(self, *args, **kwargs):
         try:
