@@ -167,7 +167,7 @@ a, a:hover, a:focus {
 }
 
 .msg-time {
-    font-size: var(--main-theme-color);
+    color: var(--main-theme-color);
     position: absolute;
     top: 21px;
     right: 20px;
