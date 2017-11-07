@@ -1,12 +1,12 @@
 from django.contrib.auth import login, logout, authenticate
-from django.views.decorators.csrf import csrf_protect
+from django.views.decorators.csrf import csrf_protect, csrf_exempt
 from django.template.response import TemplateResponse
 from .forms import RegistrationForm, LoginForm
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 
 
-@csrf_protect
+@csrf_exempt
 def signup_view(request):
     """
     Context description:
@@ -31,7 +31,7 @@ def signup_view(request):
     return TemplateResponse(request, 'www/profiles/signup.html', context)
 
 
-@csrf_protect
+@csrf_exempt
 def login_view(request):
     """
     Context description:
@@ -68,7 +68,7 @@ def login_view(request):
     return TemplateResponse(request, 'www/profiles/login.html', context)
 
 
-@csrf_protect
+@csrf_exempt
 def restore_view(request):
     return TemplateResponse(request, 'www/profiles/restore.html')
 

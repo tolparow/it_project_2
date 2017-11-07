@@ -7,6 +7,7 @@ import messenger.models as models
 from django.urls import reverse
 
 
+@csrf_exempt
 def chats_view(request):
     user = request.user
 
