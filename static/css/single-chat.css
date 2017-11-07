@@ -101,7 +101,7 @@
 }
 
 .message.to:hover {
-    background-color: rgba(173, 255, 47, 0.69);
+    background-color: rgba(173, 255, 47, 0.6);
 }
 
 .message.from:hover {
