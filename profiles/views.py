@@ -19,8 +19,8 @@ def signup_view(request):
     if request.method == 'POST':
         form = RegistrationForm(data=request.POST)
         if form.is_valid():
-            user = form.save()
-            return HttpResponseRedirect(reverse('login'))
+            login(request, form.save())
+            return HttpResponseRedirect(reverse('home'))
     elif request.user.is_authenticated:
         return HttpResponseRedirect(reverse('home'))
 
