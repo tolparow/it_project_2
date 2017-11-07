@@ -1,13 +1,15 @@
 {% load static %}
 <a href="{% url 'chat' chat.pk %}">
     <div class="row chat">
+        <span class="msg-time">{{ chat.last_message.time }}</span>
         <div class="avatar"></div>
         <div class="content">
             <p class="chat-name">
                 {{ chat.peer }}
             </p>
             <p class="chat-msg">
-                {{ chat.last_message.text|truncatechars:40 }}
+                <strong>{% if chat.last_message.sender.pk == host_user.pk %}
+                    You: {% endif %}</strong>{{ chat.last_message.text|truncatechars:40 }}
             </p>
         </div>
     </div>

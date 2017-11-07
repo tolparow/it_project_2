@@ -1,5 +1,5 @@
 <div class="row msg-row">
-    <div class="wrapper">
+    <div class="flexbox {% if host_user.pk == message.sender.pk %}to{% else %}from{% endif %}">
         <div class="message {% if host_user.pk != message.sender.pk %} from {% else %} to {% endif %}">
             <p>{{ message.text }}</p>
             <span class="msg-time">{{ message.time }}</span>

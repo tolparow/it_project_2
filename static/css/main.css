@@ -144,7 +144,7 @@ textarea {
 
 .chat-name, .chat-msg {
     width: 100%;
-    margin: 4px;
+    margin: 2px;
 }
 
 .chat-msg {
@@ -154,6 +154,8 @@ textarea {
 
 .chat-name {
     color: var(--main-theme-color);
+    font-size: 20px;
+    font-weight: 600;
 }
 
 .content {
@@ -162,4 +164,11 @@ textarea {
 
 a, a:hover, a:focus {
     text-decoration: none;
+}
+
+.msg-time {
+    font-size: var(--main-theme-color);
+    position: absolute;
+    top: 21px;
+    right: 20px;
 }

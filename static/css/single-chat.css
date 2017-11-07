@@ -77,25 +77,35 @@
 }
 
 .message {
+    cursor: pointer;
+    transition: 0.2s;
     min-width: 80px;
     font-size: 14px;
     border-radius: 15px;
     box-shadow: 0 0 10px rgba(133, 133, 133, 0.5);
     padding: 10px;
-    max-width: 50%;
+    max-width: 80%;
     margin: 15px 0 15px;
 }
 
 .message.to {
     background-color: rgba(173, 255, 47, 0.55);
     position: relative;
-    left: calc(50% - 15px);
+    right: 15px;
 }
 
 .message.from {
     background-color: rgba(152, 196, 245, 0.51);
     position: relative;
     left: 15px;
+}
+
+.message.to:hover {
+    background-color: rgba(173, 255, 47, 0.69);
+}
+
+.message.from:hover {
+    background-color: rgba(152, 196, 245, 0.71);
 }
 
 .msg-time {
@@ -182,4 +192,17 @@ textarea {
 
 .wrapper {
     width: 100%;
+}
+
+.flexbox {
+    width: 100%;
+    display: flex;
+}
+
+.flexbox.to {
+    flex-direction: row-reverse;
+}
+
+.flexbox.from {
+    flex-direction: row;
 }

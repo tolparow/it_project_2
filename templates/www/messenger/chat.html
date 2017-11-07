@@ -23,36 +23,9 @@
 </div>
 <div class="footer navbar">
     <button class="attach">Attach</button>
-    <textarea placeholder="Enter your message here" data-autoresize rows="1" class="send-message"></textarea>
+    <textarea autofocus placeholder="Enter your message here" data-autoresize rows="1" class="send-message"></textarea>
     <button class="send">Send</button>
 </div>
 </body>
-<script>
-    $(".send").click(function () {
-        var input = ".send-message";
-        console.log($(input).val() + " from " + {{ chat.peer.pk }});
-        $.ajax({
-            type: "POST",
-            data: {message: $(input).val()}
-        });
-        $(input).val("");
-
-    });
-    {#    $(".message.to").each(function () {#}
-    {#        $(this).css({left: $(this).parent().width() - $(this).width() - 30});#}
-    {#        console.log($(this).width());#}
-    {#    });#}
-    $(document).ready(function () {
-
-        setInterval(function () {
-            $('#single-chat').load(document.URL + ' #messages');
-            console.log("Updated");
-            var objDiv = $(".single-chat");
-            objDiv.scrollTop = objDiv.scrollHeight;
-        }, 1000);
-    });
-
-    var objDiv = $(".single-chat");
-    objDiv.scrollTop = objDiv.scrollHeight;
-</script>
+<script type="text/javascript" src="{% static 'js/main.js' %}"></script>
 </html>
