@@ -21,12 +21,29 @@
 </nav>
 <div class="col-12 chats">
     <div class="row search-wrapper">
-        <input class="form-control search" placeholder="Search for chats...">
+        <div class="col-12 col-md-10 col-xl-10">
+            <input class="form-control search" placeholder="Search for chats...">
+        </div>
+        <div class="col-12 col-md-2 col-xl-2">
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Write to...
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    {% for user in users %}
+                        <a class="dropdown-item" href="{% url 'chat' user.pk %}">{{ user.username }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
     </div>
     <div class="list">
-        {% for chat in chats %}
-            {% include "www/blocks/chat-shortcut.html" %}
-        {% endfor %}
+        <div class="col-12">
+            {% for chat in chats %}
+                {% include "www/blocks/chat-shortcut.html" %}
+            {% endfor %}
+        </div>
     </div>
 </div>
 <div class="footer navbar">
