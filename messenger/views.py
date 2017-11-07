@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.core.handlers.wsgi import WSGIRequest
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseForbidden
 from django.template.response import TemplateResponse
@@ -19,15 +20,21 @@ def messages_view(request):
 
 
 @csrf_exempt
-def chat_view(request: WSGIRequest, chat_id):
+def chat_view(request: WSGIRequest, peer_id):
     user = request.user
-    chat = models.Chat.objects.get(pk=chat_id)
 
-    if chat.host != user:
+    try:
+        peer = get_user_model().objects.get(pk=peer_id)
+    except get_user_model().DoesNotExist:
         return HttpResponseForbidden()
 
-    if user.is_authenticated:
+    try:
+        chat = models.Chat.objects.get(host=user, peer=peer)
+    except models.Chat.DoesNotExist:
+        chat = models.Chat(host=user, peer=peer)
+        chat.save()
 
+    if user.is_authenticated:
         context = {
             'host_user': request.user,
             'chat': chat,
