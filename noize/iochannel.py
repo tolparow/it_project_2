@@ -50,13 +50,13 @@ def write_file(content, file_name = "output.txt", is_string = False):
 #Write bytes and swipes some their bits with probability of swap @noise_level
 #to file with name @file_name
 def write_bytes_with_noise(bytes, file_name = "output.txt", noise_level = 0.0):
-    write_to_file(make_some_noise(bytes,noise_level), file_name)
+    write_file(make_some_noise(bytes,noise_level), file_name)
 
 
 #Write string and swipes some their bits with probability of swap @noise_level
 #to file with name @file_name
 def write_string_with_noise(string, file_name = "output.txt", noise_level = 0.0):
-    write_to_file(make_some_noise(string, noise_level, is_string=True), file_name)
+    write_file(make_some_noise(string, noise_level, is_string=True), file_name)
 
 
 #Find number of bits which are different in two objects of type bytes()
