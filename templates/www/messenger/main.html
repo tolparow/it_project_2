@@ -31,7 +31,9 @@
                     Write to...
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <a class="dropdown-item" href="#">Action</a>
+                    {% for user in users %}
+                        <a class="dropdown-item" href="{% url 'chat' user.pk %}">{{ user.username }}</a>
+                    {% endfor %}
                 </div>
             </div>
         </div>
