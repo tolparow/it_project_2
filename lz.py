@@ -12,22 +12,33 @@ def get_bytes(obj, is_file=False):
 
 
 def get_str(file_path):
-    with open(file_path, 'r') as f:
+    with open(file_path, 'rb') as f:
         return f.read()
 
+def update_string(byte_string):
+    #print(byte_string)
+    updated_string = ''
+    temp = byte_string.__str__()
+    for c in temp:
+        if c == '\\':
+            updated_string += ' \\'
+        else:
+            updated_string += c
+    return updated_string
 
 def compress(uncompressed):
     """Compress a string to a list of output symbols."""
 
+    # print(uncompressed)
     # Build the dictionary.
     dict_size = 256
     dictionary = dict((chr(i), chr(i)) for i in range(dict_size))
     # in Python 3: dictionary = {chr(i): chr(i) for i in range(dict_size)}
 
-    w = ""
+    w = ''
     result = []
     for c in uncompressed:
-        wc = w + c
+        wc = w + chr(c)
         if wc in dictionary:
             w = wc
         else:
@@ -35,13 +46,12 @@ def compress(uncompressed):
             # Add wc to the dictionary.
             dictionary[wc] = dict_size
             dict_size += 1
-            w = c
+            w = chr(c)
 
     # Output the code for w.
     if w:
         result.append(dictionary[w])
-    global size_of_compressed
-    size_of_compressed = sys.getsizeof(result)
+    # print(result)
     return result
 
 
