@@ -127,7 +127,7 @@ def encode(bits, n, nt_to_bits=None):
     return final_seq
 
 
-def get_origin(n_errors):
+def get_origin():
     return initial_bits
 
 
