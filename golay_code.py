@@ -128,10 +128,7 @@ def encode(bits, n, nt_to_bits=None):
 
 
 def get_origin(n_errors):
-    if n_errors >= 4:
-        return None
-    else:
-        return initial_bits
+    return initial_bits
 
 
 def decode_bits(received_bitvec):
