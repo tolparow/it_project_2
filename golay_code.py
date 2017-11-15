@@ -1,35 +1,71 @@
 import numpy
 
+number_of_symbols = 0
 
-def tobits(s):
-    result = []
-    for c in s:
-        bits = bin(ord(c))[2:]
-        bits = '000000000000'[len(bits):] + bits
-        result.extend([int(b) for b in bits])
-    print(result)
-    return result
+initial_bits = ''
 
 
-def frombits(bits):
+def _from_encoding_to_bits(s, nt_to_bits=None):
+    if nt_to_bits is None:
+        nt_to_bits = DEFAULT_GOLAY_NT_TO_BITS
+    bitstring = ''
+    for nt in s:
+        bitstring += nt_to_bits[nt]
+    return bitstring
+
+
+def _from_bits_to_encoding(bits, nt_to_bits=None):
+    if nt_to_bits is None:
+        nt_to_bits = DEFAULT_GOLAY_NT_TO_BITS
+    bits_to_nt = dict(zip(nt_to_bits.values(), nt_to_bits.keys()))
+    seq = ""
+    for i in range(0, len(bits), 2):  # take bits in twos
+        bit1 = str(int(bits[i]))
+        bit2 = str(int(bits[i + 1]))
+        seq += bits_to_nt[bit1 + bit2]
+    return seq
+
+
+def to_bits(s):
+    global initial_bits
+    initial_bits = s
+    return [int(item) for sublist in (format(x, '012b') for x in s) for item in sublist]
+
+
+def from_bits(bits):
     chars = []
-    for b in range(len(bits) / 12):
+    for b in range(int(len(bits) / 12)):
         byte = bits[b * 12:(b + 1) * 12]
         chars.append(chr(int(''.join([str(bit) for bit in byte]), 2)))
     return ''.join(chars)
 
 
-def get_invalid_golay_barcodes(seqs):
-    result = []
-    for e in seqs:
-        if len(e) != 12:
-            result.append(e)
-        elif decode(e)[1] > 0:
-            result.append(e)
-    return result
-
-
 def decode(seq, nt_to_bits=None):
+    if nt_to_bits is None:
+        nt_to_bits = DEFAULT_GOLAY_NT_TO_BITS
+
+    received_bits = seq
+
+    final_seq = ''
+
+    number_of_errors = 0
+
+    for i in range(0, number_of_symbols * 12, 12):
+        temp = received_bits[i] + received_bits[i + 1] + received_bits[i + 2] + received_bits[i + 3] + \
+               received_bits[i + 4] + received_bits[i + 5] + received_bits[i + 6] + received_bits[i + 7] + \
+               received_bits[i + 8] + received_bits[i + 9] + received_bits[i + 10] + received_bits[i + 11]
+        # print(temp)
+        corrected_bits, num_errors = decode_12(temp, nt_to_bits)
+        if corrected_bits != None:
+            final_seq += corrected_bits
+        else:
+            final_seq += '____________'
+        number_of_errors += num_errors
+
+    return final_seq, number_of_errors
+
+
+def decode_12(seq, nt_to_bits):
     """decodes a nucleotide string of 12 bases, using bitwise error checking
     inputs:
     - seq, a string of nucleotides
@@ -37,8 +73,6 @@ def decode(seq, nt_to_bits=None):
     output:
     corrected_seq (str), num_bit_errors
     corrected_seq is None if 4 bit error detected"""
-    if nt_to_bits is None:
-        nt_to_bits = DEFAULT_GOLAY_NT_TO_BITS
     received_bits = _seq_to_bits(seq, nt_to_bits)
     corrected_bits, num_errors = decode_bits(received_bits)  # errors in # bits
     if corrected_bits is None:
@@ -55,25 +89,53 @@ decode_golay_12 = decode
 def encode(bits, n, nt_to_bits=None):
     """ takes any 12 bits, returns the golay 24bit codeword in nucleotide format
     bits is a list/array, 12 long, e.g.: [0,0,0,0,0,0,0,0,0,1,0,0]
-    nt_to_bits is e.g.: {"A":"11", "C":"00", "T":"10", "G":"01"},None => default
+    nt_to_bits is e.g.: {"A":"11", "C":"00", "T":"10", "G":"01"}, None => default
     output is e.g.: 'AGTCTATTGGCT'
     """
+    global number_of_symbols
+    number_of_symbols = n
+
+    final_seq = ''
+
     if nt_to_bits is None:
         nt_to_bits = DEFAULT_GOLAY_NT_TO_BITS
 
-    bits = numpy.array(bits).reshape((12, n))
+    for i in range(0, number_of_symbols * 12, 12):
+        temp_list = []
+        temp_list.append(bits[i])
+        temp_list.append(bits[i + 1])
+        temp_list.append(bits[i + 2])
+        temp_list.append(bits[i + 3])
+        temp_list.append(bits[i + 4])
+        temp_list.append(bits[i + 5])
+        temp_list.append(bits[i + 6])
+        temp_list.append(bits[i + 7])
+        temp_list.append(bits[i + 8])
+        temp_list.append(bits[i + 9])
+        temp_list.append(bits[i + 10])
+        temp_list.append(bits[i + 11])
+        temp = numpy.array(temp_list)
+        temp_list.clear()
 
-    # cheap way to do binary xor in matrix dot
-    res = numpy.dot(DEFAULT_G.T, bits)
-    codeword = divmod(res.ravel(), 2)[1]
-    print('codeword')
-    print(codeword)
+        new_bits = numpy.array(temp).reshape((12, 1))
 
-    return _bits_to_seq(codeword, nt_to_bits)
+        # cheap way to do binary xor in matrix dot
+        res = numpy.dot(DEFAULT_G.T, new_bits)
+        codeword = divmod(res.ravel(), 2)[1]
+        final_seq += _bits_to_seq(codeword, nt_to_bits)
+
+    return final_seq
+
+
+def get_origin(n_errors):
+    if n_errors >= 4:
+        return None
+    else:
+        return initial_bits
 
 
 def decode_bits(received_bitvec):
-    """ decode a recieved 24 bit vector to a corrected 24 bit vector
+    """ decode a received 24 bit vector to a corrected 24 bit vector
     uses golay defaults
     input: received bitvec is 24 bits long, listlike
     output: corrected_vec, num_bit_errors
@@ -85,7 +147,6 @@ def decode_bits(received_bitvec):
     except KeyError:
         return None, 4
     corrected = (rec + err) % 2  # best guess for transmitted bitvector
-
     return corrected, numpy.sum(err)
 
 
@@ -137,7 +198,9 @@ def _seq_to_bits(seq, nt_to_bits):
     bitstring = ''
     for nt in seq:
         bitstring += nt_to_bits[nt]
-    bits = numpy.array(map(int, bitstring))
+    bits = numpy.array(list(map(int, bitstring)))
+    # print('bits')
+    # print(bits)
     return bits
 
 
@@ -145,6 +208,7 @@ def _bits_to_seq(bits, nt_to_bits):
     """ e.g.: array([0,0,0,0,1,0]) -> "AAG"
     nt_to_bits is e.g.: {"A":"11", "C":"00", "T":"10", "G":"01"}
     """
+    # print(bits)
     bits_to_nt = dict(zip(nt_to_bits.values(), nt_to_bits.keys()))
     seq = ""
     for i in range(0, len(bits), 2):  # take bits in twos
@@ -158,7 +222,7 @@ def _bits_to_seq(bits, nt_to_bits):
 
 
 # BEGIN module level constants
-DEFAULT_GOLAY_NT_TO_BITS = {"A": "11", "C": "00", "T": "10", "G": "01"}
+DEFAULT_GOLAY_NT_TO_BITS = {"A": "11", "O": "00", "U": "10", "G": "01"}
 
 # We use this matrix as the parity submatrix P
 DEFAULT_P = numpy.array([
