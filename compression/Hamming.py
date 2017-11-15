@@ -1,5 +1,5 @@
 import math
-
+import os
 
 def bitstring_to_bytes(s):
     v = int(s, 2)
@@ -11,8 +11,7 @@ def bitstring_to_bytes(s):
 
 
 def is_power_of_two(n):
-    m = math.log(n, 2)
-    return m == int(m)
+    return n & (n - 1) == 0
 
 
 def power_2_below(n):
@@ -26,7 +25,6 @@ def bytes_to_bitstring(b):
 
 def pre_prepare_bits(bits):
     leng = len(bits)
-    print(leng)
     try:
         while bits[0] == '0':
             bits = bits[1:]
@@ -38,7 +36,6 @@ def pre_prepare_bits(bits):
 
 def post_prepare_bits(bits):
     leng = len(bits)
-    print(leng)
     bits = '1' + bits
     while len(bits) % 8 != 0:
         bits = '0' + bits
@@ -96,13 +93,12 @@ class Hamming:
             else:
                 return bits[i - 1] + rest_answer
 
-    def code(self, message, is_string=True):
+    def encode(self, message, is_string=True):
         bits = ""
         if is_string:
             bits = bytes_to_bitstring(message)
         else:
             bits = message[:]
-        print(bits)
         bits_with_paraties = self.prepare(bits, 1)
         return bitstring_to_bytes(post_prepare_bits(self.set_parity_bits(bits_with_paraties, 1)))
 
@@ -112,7 +108,6 @@ class Hamming:
             bits = bytes_to_bitstring(message)
         else:
             bits = message[:]
-        print(bits)
         bits = pre_prepare_bits(bits)
         parity_results = self.check_parity(bits, power_2_below(len(bits)))
         n = self.bits_to_number(parity_results)
@@ -122,7 +117,7 @@ class Hamming:
             "NB: bit ", n, " is bad. Flipping."
             bits[n - 1] = 1 - bits[n - 1]
 
-        return self.extract_data(bits, 1)
+        return bitstring_to_bytes(self.extract_data(bits, 1))
 
     def extract_data(self, bits, i):
         if i > len(bits):
@@ -140,3 +135,35 @@ class Hamming:
         else:
             bit = 0 if self.has_odd_parity(bits, i) else 1
             return [bit] + self.check_parity(bits, power_2_below(i - 1))
+
+
+def compress(path=None, to_be_compressed=None):
+    if path is not None:
+        with open(path, 'rb') as f:
+            text = f.read()
+        h = Hamming()
+        compressed = h.encode(text)
+        filename, file_extension = os.path.splitext(path)
+        output_path = filename + ".hamm"
+        with open(output_path, 'wb') as output:
+            output.write(compressed)
+        return output_path
+    else:
+        h = Hamming()
+        return h.compress(to_be_compressed)
+
+
+def decompress(path=None, extension=None, compressed=None):
+    if path is not None:
+        with open(path, 'rb') as f:
+            text = f.read()
+        h = Hamming()
+        decompressed = h.decode(text)
+        filename, file_extension = os.path.splitext(path)
+        output_path = filename + "_decompressed" + extension
+        with open(output_path, 'wb') as output:
+            output.write(decompressed)
+        return output_path
+    else:
+        h = Hamming()
+        return h.decode(compressed)
