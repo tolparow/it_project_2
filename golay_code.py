@@ -2,7 +2,7 @@ import numpy
 
 number_of_symbols = 0
 
-initial_bits = ''
+positions_of_broken_bits = []
 
 
 def _from_encoding_to_bits(s, nt_to_bits=None):
@@ -54,11 +54,12 @@ def decode(seq, nt_to_bits=None):
         temp = received_bits[i] + received_bits[i + 1] + received_bits[i + 2] + received_bits[i + 3] + \
                received_bits[i + 4] + received_bits[i + 5] + received_bits[i + 6] + received_bits[i + 7] + \
                received_bits[i + 8] + received_bits[i + 9] + received_bits[i + 10] + received_bits[i + 11]
-        # print(temp)
         corrected_bits, num_errors = decode_12(temp, nt_to_bits)
-        if corrected_bits != None:
+        global positions_of_broken_bits
+        if corrected_bits is not None:
             final_seq += corrected_bits
         else:
+            positions_of_broken_bits.append(i / 12)
             final_seq += '____________'
         number_of_errors += num_errors
 
@@ -127,7 +128,14 @@ def encode(bits, n, nt_to_bits=None):
     return final_seq
 
 
+initial_bits = ''
+
+
 def get_origin():
+    global initial_bits
+    global positions_of_broken_bits
+    for position in positions_of_broken_bits:
+        initial_bits = initial_bits[:int(position)] + b'_' + initial_bits[int(position + 1):]
     return initial_bits
 
 
