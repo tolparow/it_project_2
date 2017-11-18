@@ -1,6 +1,7 @@
 import math
 import os
 
+
 def bitstring_to_bytes(s):
     v = int(s, 2)
     b = bytearray()
@@ -46,23 +47,21 @@ class Hamming:
     def covers(self, i, j):
         return (j >> int(math.log(i, 2))) % 2 == 1
 
-    def sum_bits(self, bits, i, j):
-        if j > len(bits):
+    def sum_bits(self, bits, i):
+        if i > len(bits):
             return 0
         else:
-            result = self.sum_bits(bits, i, j + 1)
-            if self.covers(i, j):
-                # NB: j-1 below because lists are 0-based.
-                #
-                return int(bits[j - 1]) + result
-            else:
-                return int(result)
+            result = 0
+            for j in range(i, len(bits) + 1):
+                if self.covers(i, j):
+                    result += int(bits[j - 1])
+            return result
 
     def has_odd_parity(self, bits, i):
-        return self.sum_bits(bits, i, i) % 2 == 1
+        return self.sum_bits(bits, i) % 2 == 1
 
     def has_even_parity(self, bits, i):
-        return self.sum_bits(bits, i, i) % 2 == 0
+        return self.sum_bits(bits, i) % 2 == 0
 
     def bits_to_number(self, bits):
         if bits == []:
@@ -71,27 +70,30 @@ class Hamming:
             n = bits[0] * (2 ** (len(bits) - 1))
             return n + self.bits_to_number(bits[1:])
 
-    def prepare(self, bits, i):
-        if bits == "":
-            return ""
-        else:
-            if is_power_of_two(i):
-                return '0' + self.prepare(bits, i + 1)
+    def prepare(self, bits):
+        result = ""
+        j = 0
+        i = 0
+        while i < len(bits):
+            if is_power_of_two(i + j + 1):
+                result += '0'
+                j += 1
+                i -= 1
             else:
-                return bits[0] + self.prepare(bits[1:], i + 1)
+                result += bits[i]
+            i += 1
+        return result
 
-    def set_parity_bits(self, bits, i):
-        if i > len(bits):
-            return ''
-        else:
-            rest_answer = self.set_parity_bits(bits, i + 1)
+    def set_parity_bits(self, bits):
+        for i in range(1, len(bits) + 1):
             if is_power_of_two(i):
                 if self.has_odd_parity(bits, i):
-                    return '0' + rest_answer
+                    if bits[i - 1] != '0':
+                        bits = bits[:i - 1] + '0' + bits[i:]
                 else:
-                    return '1' + rest_answer
-            else:
-                return bits[i - 1] + rest_answer
+                    if bits[i - 1] != '1':
+                        bits = bits[:i - 1] + '1' + bits[i:]
+        return bits
 
     def encode(self, message, is_string=True):
         bits = ""
@@ -99,8 +101,8 @@ class Hamming:
             bits = bytes_to_bitstring(message)
         else:
             bits = message[:]
-        bits_with_paraties = self.prepare(bits, 1)
-        return bitstring_to_bytes(post_prepare_bits(self.set_parity_bits(bits_with_paraties, 1)))
+        bits_with_paraties = self.prepare(bits)
+        return bitstring_to_bytes(post_prepare_bits(self.set_parity_bits(bits_with_paraties)))
 
     def decode(self, message, is_string=True):
         bits = ""
@@ -117,17 +119,14 @@ class Hamming:
             "NB: bit ", n, " is bad. Flipping."
             bits[n - 1] = 1 - bits[n - 1]
 
-        return bitstring_to_bytes(self.extract_data(bits, 1))
+        return bitstring_to_bytes(self.extract_data(bits))
 
-    def extract_data(self, bits, i):
-        if i > len(bits):
-            return ""
-        else:
-            rest_answer = self.extract_data(bits, i + 1)
-            if is_power_of_two(i):
-                return rest_answer
-            else:
-                return bits[i - 1] + rest_answer
+    def extract_data(self, bits):
+        result = ""
+        for i in range(1, len(bits) + 1):
+            if not is_power_of_two(i):
+                result += bits[i - 1]
+        return result
 
     def check_parity(self, bits, i):
         if i == 1:
