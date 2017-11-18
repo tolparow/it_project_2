@@ -1,0 +1,31 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href={% static 'css/single-chat.css' %}>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
+
+    <title>Chat</title>
+</head>
+<body>
+<nav class="header navbar navbar-fixed-top">
+    <a href="{% url 'home' %}" class="back" style="background-image: url('{% static 'img/back.svg' %}')"></a>
+    <a class="navbar-right friend" href="">{{ chat.peer }}</a>
+</nav>
+<div class="col-12 single-chat" id="single-chat">
+    {% include "www/blocks/chat-messages.html" %}
+</div>
+<div class="footer navbar">
+    <button class="attach">Attach</button>
+    <textarea autofocus placeholder="Enter your message here" data-autoresize rows="1" class="send-message"></textarea>
+    <button class="send">Send</button>
+</div>
+</body>
+<script type="text/javascript" src="{% static 'js/main.js' %}"></script>
+</html>

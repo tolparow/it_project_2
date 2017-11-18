@@ -1,0 +1,64 @@
+.title {
+    color: #5e81a8;
+    text-align: center;
+}
+
+.auth-container {
+    position: relative;
+}
+
+.auth-form {
+    box-shadow: 0 0 10px rgba(133, 133, 133, 0.5);
+    border-radius: 10px;
+    padding: 100px 10px 20px;
+}
+
+.auth-form input {
+    border: 1px solid #5e81a8;
+    border-radius: 5px;
+    padding: 7px;
+    background-size: 20px;
+    background: no-repeat center right 0;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.login-btn {
+    border: 1px solid #5e81a8;
+    background-color: #ffffff;
+    color: #5e81a8;
+    transition: 0.2s;
+    cursor: pointer;
+    width: 100%;
+}
+
+.login-btn:hover {
+    background-color: #5e81a8;
+    color: white;
+}
+
+.login {
+    margin-top: 180px;
+}
+
+.links {
+    text-align: center;
+    margin: 10px 0 10px;
+}
+
+.unlock {
+    background-color: white;
+    height: 150px;
+    width: 150px;
+    position: absolute;
+    top: -75px;
+    left: calc(50% - 75px);
+    background-size: 100%;
+    background-repeat: no-repeat;
+}
+
+@media (max-width: 569px) {
+    .login {
+        margin-top: 150px;
+    }
+}

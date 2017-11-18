@@ -1,0 +1,47 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href={% static 'css/profiles.css' %}>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
+
+    <title>Restore password</title>
+</head>
+<body>
+<div class="container login">
+    <div class="row">
+        <div class="col-12 col-sm-8 offset-sm-2 col-md-6 offset-md-3 col-xl-6 offset-xl-3 auth-container">
+            <div class="auth-form">
+                <div class="unlock" style="background-image: url({% static 'img/restore.svg' %})"></div>
+                <h1 class="title">
+                    Restore password
+                </h1>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="col-12">
+                        <input type="text" placeholder="Username" class="username" name="username">
+                    </div>
+                    <div class="col-12">
+                        <input type="password" placeholder="New password" class="password" name="password">
+                    </div>
+                    <div class="col-12">
+                        <input type="password" placeholder="Repeat password" class="password" name="password-repeat">
+                    </div>
+                    <div class="col-12">
+                        <button class="login-btn btn btn-default">
+                            Restore
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
