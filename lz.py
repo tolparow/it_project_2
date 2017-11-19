@@ -21,12 +21,9 @@ def compress(uncompressed):
 
     # Build the dictionary
     dictionary_size = 256
-    # current_milli_time_before = int(round(time.time() * 1000))
+    
     dictionary = dict((bytes([i]), bytes([i])) for i in range(dictionary_size))
-    # current_milli_time_after = int(round(time.time() * 1000))
-    # print('Time taken by making dict : ' + (current_milli_time_after - current_milli_time_before).__str__() + ' ms')
 
-    # current_milli_time_before = int(round(time.time() * 1000))
     # Applying compression algorithm
     single_byte = b''
     compressed = []
@@ -39,16 +36,10 @@ def compress(uncompressed):
             dictionary[temp_bytes] = dictionary_size
             dictionary_size += 1
             single_byte = bytes([byte])
-    # current_milli_time_after = int(round(time.time() * 1000))
-    # print('Time taken by algorithm : ' + (current_milli_time_after - current_milli_time_before).__str__() + ' ms')
 
     if single_byte:
         compressed.append(dictionary[single_byte])
-
-    # current_milli_time_before = int(round(time.time() * 1000))
-    # result = rlp.encode(compressed)
-    # current_milli_time_after = int(round(time.time() * 1000))
-    # print('Time taken by rlp : ' + (current_milli_time_after - current_milli_time_before).__str__() + ' ms')
+        
     return rlp.encode(compressed)
 
 
@@ -56,7 +47,7 @@ def decompress(compressed):
     """Decompress a list of bytes to original string of bytes"""
 
     compressed = rlp.decode(compressed)
-    # compressed = rlp.decode(compressed)
+    
     # Build the dictionary of integers, as.
     dictionary_size = 256
     dictionary = dict((i, i) for i in range(dictionary_size))
