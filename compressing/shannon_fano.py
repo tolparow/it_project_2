@@ -1,7 +1,8 @@
 from bitarray import bitarray
 
-def __separator():
-    return 0x01011.to_bytes(2, "big")
+
+# def __separator():
+#     return 0x1011.to_bytes(2, "big")
 
 def compress(message: bytes):
     """
@@ -22,24 +23,26 @@ def compress(message: bytes):
             # XXX: ошибка с неправильным обратным отображением может быть тут. исмволы типа: "\x80"
             tuplist.append([i, freq[i], ''])
 
-    #sort tuplist by frequency
+    # sort tuplist by frequency
     stuplist = sorted(tuplist, key=lambda tup: tup[1], reverse=True)
-    # stuplist.append((len(tuplist), 0, '')) #Separator
+    # stuplist.append([len(tuplist), 0, '']) #Separator
     alph = __requr_work(stuplist, 0, len(stuplist) - 1)
     # len of alphabet
-    part1 = str(len(alph)) + __separator().decode()
+    part1 = str(len(alph)) + "\n"
     # bytes with alphabet in format: 'letter''code''separator'...
     part2 = b''
     for i in alph:
         # TODO: short cycle
-        part2 += (i[0]).to_bytes(1, byteorder='big')
-        part2 += (__prepare_bytes(i[2]))
-        part2 += __separator()
+        iter = b''
+        iter += (i[0]).to_bytes(1, byteorder='big')  # byte symbol [0..255]
+        tmp = __prepare_bytes(i[2])
+        iter += len(tmp).to_bytes(1, 'big') #str(len(tmp)).encode()  # size of next element - byte [0..255]
+        iter += tmp  # code of symbol
+        part2 += iter
 
     alphabet = {}
     for i in alph:
         alphabet[i[0]] = i[2]
-    print(alphabet)
     # message
     part3 = ''
     for b in bytes:
@@ -49,28 +52,41 @@ def compress(message: bytes):
     return result
 
 
-
 def decompress(message: bytes):
     """
     Shannon-Fano decompress
     Send bytes ONLY!!
 
+    WARNING!!!! DO NOT USE IT WITH DATA > 1 MB
+
     :return: decompressed message bytes
     """
     # 1. Restore alphabet
-    num = int(message.split(__separator())[0])
-    alph = message.split(__separator())[1:num + 1]
+    tmp = message.split("\n".encode())[0]
+    num = int(tmp)
+    counter = len(tmp) + 1  # index of begin of first symbol at alphabet
     alphabet = {}
-    for i in alph:
-        alphabet[__restore_bits(i[1:])] = i[0].to_bytes(1, 'big') #string->bytes
+    for i in range(num):
+        symb = message[counter]  # byte
+        counter += 1
+        leng = message[counter]  # byte
+        counter += 1
+        tmp = b''
+        for j in range(leng):
+            tmp += message[counter].to_bytes(1, 'big')
+            counter += 1
+        alphabet[__restore_bits(tmp)] = symb.to_bytes(1, 'big')
 
+    #TODO: optimize asymptotic: ~1MB/min
+    print("hello")
     # 2. Restore message
-    tmp = message.split(__separator())[num + 1:][0]
+    tmp = message[counter:]
     msg = __restore_bits(tmp)
     restored = b''
     tmp = ''
     for bit in msg:
         tmp += str(int(bit))
+        # print(tmp)
         if tmp in alphabet:
             restored += alphabet[tmp]
             tmp = ''
@@ -89,6 +105,7 @@ def __prepare_bytes(bins):
     bins = '1' + bins
     bins = '0' * int(8 - len(bins) % 8) + bins
     return bitarray(bins).tobytes()
+
 
 def __requr_work(stuplist, begin, end):
     """
@@ -131,7 +148,6 @@ def __requr_work(stuplist, begin, end):
     return stuplist
 
 
-
 def __restore_bits(bytes: bytes):
     """
     correctly parses compressed bytes to bitarray, due to 00...001 prefix in unfully bytes
@@ -143,4 +159,4 @@ def __restore_bits(bytes: bytes):
     bits.frombytes(bytes)
     while not bits.pop(0):
         continue
-    return bits.to01() #string
+    return bits.to01()  # string
