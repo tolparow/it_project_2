@@ -1,6 +1,6 @@
-import sys
+import rlp
+import time
 
-size_of_compressed = 0
 
 def get_bytes(obj, is_file=False):
     if is_file:
@@ -15,72 +15,71 @@ def get_str(file_path):
     with open(file_path, 'rb') as f:
         return f.read()
 
-def update_string(byte_string):
-    #print(byte_string)
-    updated_string = ''
-    temp = byte_string.__str__()
-    for c in temp:
-        if c == '\\':
-            updated_string += ' \\'
-        else:
-            updated_string += c
-    return updated_string
 
 def compress(uncompressed):
-    """Compress a string to a list of output symbols."""
+    """Compress a string of bytes to a list of bytes and integer positions"""
 
-    # print(uncompressed)
-    # Build the dictionary.
-    dict_size = 256
-    dictionary = dict((chr(i), chr(i)) for i in range(dict_size))
-    # in Python 3: dictionary = {chr(i): chr(i) for i in range(dict_size)}
+    # Build the dictionary
+    dictionary_size = 256
+    # current_milli_time_before = int(round(time.time() * 1000))
+    dictionary = dict((bytes([i]), bytes([i])) for i in range(dictionary_size))
+    # current_milli_time_after = int(round(time.time() * 1000))
+    # print('Time taken by making dict : ' + (current_milli_time_after - current_milli_time_before).__str__() + ' ms')
 
-    w = ''
-    result = []
-    for c in uncompressed:
-        wc = w + chr(c)
-        if wc in dictionary:
-            w = wc
+    # current_milli_time_before = int(round(time.time() * 1000))
+    # Applying compression algorithm
+    single_byte = b''
+    compressed = []
+    for byte in uncompressed:
+        temp_bytes = single_byte + bytes([byte])
+        if temp_bytes in dictionary:
+            single_byte = temp_bytes
         else:
-            result.append(dictionary[w])
-            # Add wc to the dictionary.
-            dictionary[wc] = dict_size
-            dict_size += 1
-            w = chr(c)
+            compressed.append(dictionary[single_byte])
+            dictionary[temp_bytes] = dictionary_size
+            dictionary_size += 1
+            single_byte = bytes([byte])
+    # current_milli_time_after = int(round(time.time() * 1000))
+    # print('Time taken by algorithm : ' + (current_milli_time_after - current_milli_time_before).__str__() + ' ms')
 
-    # Output the code for w.
-    if w:
-        result.append(dictionary[w])
-    # print(result)
-    return result
+    if single_byte:
+        compressed.append(dictionary[single_byte])
+
+    # current_milli_time_before = int(round(time.time() * 1000))
+    # result = rlp.encode(compressed)
+    # current_milli_time_after = int(round(time.time() * 1000))
+    # print('Time taken by rlp : ' + (current_milli_time_after - current_milli_time_before).__str__() + ' ms')
+    return rlp.encode(compressed)
 
 
 def decompress(compressed):
-    """Decompress a list of output ks to a string."""
-    from io import StringIO
+    """Decompress a list of bytes to original string of bytes"""
 
-    # Build the dictionary.
-    dict_size = 256
-    dictionary = dict((chr(i), chr(i)) for i in range(dict_size))
-    # in Python 3: dictionary = {chr(i): chr(i) for i in range(dict_size)}
+    compressed = rlp.decode(compressed)
+    # compressed = rlp.decode(compressed)
+    # Build the dictionary of integers, as.
+    dictionary_size = 256
+    dictionary = dict((i, i) for i in range(dictionary_size))
 
-    # use StringIO, otherwise this becomes O(N^2)
-    # due to string concatenation in a loop
-    result = StringIO()
-    w = compressed.pop(0)
-    result.write(w)
-    for k in compressed:
-        if k in dictionary:
-            entry = dictionary[k]
-        elif k == dict_size:
-            entry = w + w[0]
+    # Applying decompression algorithm
+    decompressed = []
+    single_byte = compressed.pop(0)
+    decompressed.append(single_byte)
+    for list_entry in compressed:
+        if isinstance(list_entry, bytes):
+            list_entry = int.from_bytes(list_entry, 'big')
+        if list_entry in dictionary:
+            entry = bytes([dictionary[list_entry]]) if isinstance(dictionary[list_entry], int) else dictionary[list_entry]
+        elif list_entry == dictionary_size:
+            entry = single_byte + bytes([single_byte[0]])
         else:
-            raise ValueError('Bad compressed k: %s' % k)
-        result.write(entry)
+            raise ValueError('Cannot decompress list entry: %s' % list_entry)
+        decompressed.append(entry)
 
-        # Add w+entry[0] to the dictionary.
-        dictionary[dict_size] = w + entry[0]
-        dict_size += 1
+        # Add combinations of entries to the dictionary.
+        dictionary[dictionary_size] = single_byte + bytes([entry[0]])
+        dictionary_size += 1
 
-        w = entry
-    return result.getvalue()
+        single_byte = entry
+
+    return b''.join(decompressed)
