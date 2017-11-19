@@ -13,8 +13,15 @@ def get_str(file_path):
         return f.read()
 
 
-#add noise to message
 def make_some_noise(message, noise_level = 0.0, is_string=False):
+    """
+    add noise to message
+
+    :param message: input data
+    :param noise_level: real number in range [0..1]
+    :param is_string: is it string or bytes
+    :return: noised bytes
+    """
     assert(noise_level >= 0 and noise_level <= 1), ("Wrong value of noise_level! " + str(noise_level) + " not in [0;1]  ")
     set_of_bytes = bytearray()
     if is_string:
@@ -47,9 +54,16 @@ def write_file(content, file_name = "output.txt", is_string = False):
             f.write(content)
 
 
-#Write bytes and swipes some their bits with probability of swap @noise_level
-#to file with name @file_name
+
 def write_bytes_with_noise(bytes, file_name = "output.txt", noise_level = 0.0):
+    """
+    Write bytes and swipes some their bits with probability of swap @noise_level
+    to file with name @file_name
+
+    :param bytes: input sequence
+    :param file_name: path to output file
+    :param noise_level: real number in range [0..1]
+    """
     write_file(make_some_noise(bytes,noise_level), file_name)
 
 
@@ -59,8 +73,14 @@ def write_string_with_noise(string, file_name = "output.txt", noise_level = 0.0)
     write_file(make_some_noise(string, noise_level, is_string=True), file_name)
 
 
-#Find number of bits which are different in two objects of type bytes()
-def count_difference_bytes(original, received):
+def count_difference_bytes(original:bytes, received:bytes):
+    """
+    Find number of bits which are different in two objects of type bytes()
+
+    :param original: bytes from original file
+    :param received: bytes after noise decoded
+    :return: number of bits that are not equal in original and received
+    """
     assert (len(original) == len(received)), "Different length of original and received"
     count = 0
     for i in range(len(original)):
@@ -74,31 +94,15 @@ def count_difference_bytes(original, received):
     return count
 
 
-#Find number of bits which are different in two files with paths @file1, @file2
-def count_difference_files(file1, file2):
+
+def count_difference_files(file1:str, file2:str):
+    """
+    Find number of bits which are different in two files with paths @file1, @file2
+
+    :param file1: path to file
+    :param file2: path to file
+    :return: number of bits that are not equal in original and received
+    """
     bytes1 = get_bytes(file1, is_file=True)
     bytes2 = get_bytes(file2, is_file=True)
     return count_difference_bytes(bytes1, bytes2)
-
-
-# dif = count_difference_files("input.txt", "input2.txt")
-
-
-# dif = 24
-# while dif>=20:
-#     b = b"abc"
-#     dif = count_difference_bytes(b, make_some_noise(b, 0.99))
-#
-# print(str(dif))
-
-
-##work with string
-# inp = "abc"
-# print("input is >> ", inp)
-# write_string_with_noise(inp, noise_level=0.1)
-
-
-# #work with bytes
-# i = b"abc"
-# print("input is >> ", i)
-# write_bytes_with_noise(i, noise_level=1.0)
