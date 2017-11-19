@@ -1,7 +1,7 @@
 from bitarray import bitarray
 
 def __separator():
-    return 0x0001.to_bytes(2, "big")
+    return 0x01011.to_bytes(2, "big")
 
 def compress(message: bytes):
     """
@@ -24,6 +24,7 @@ def compress(message: bytes):
 
     #sort tuplist by frequency
     stuplist = sorted(tuplist, key=lambda tup: tup[1], reverse=True)
+    # stuplist.append((len(tuplist), 0, '')) #Separator
     alph = __requr_work(stuplist, 0, len(stuplist) - 1)
     # len of alphabet
     part1 = str(len(alph)) + __separator().decode()
@@ -38,6 +39,7 @@ def compress(message: bytes):
     alphabet = {}
     for i in alph:
         alphabet[i[0]] = i[2]
+    print(alphabet)
     # message
     part3 = ''
     for b in bytes:
