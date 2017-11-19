@@ -36,7 +36,7 @@ def compress(message: bytes):
         iter = b''
         iter += (i[0]).to_bytes(1, byteorder='big')  # byte symbol [0..255]
         tmp = __prepare_bytes(i[2])
-        iter += len(tmp).to_bytes(1, 'big') #str(len(tmp)).encode()  # size of next element - byte [0..255]
+        iter += len(tmp).to_bytes(1, 'big')  # str(len(tmp)).encode()  # size of next element - byte [0..255]
         iter += tmp  # code of symbol
         part2 += iter
 
@@ -57,8 +57,6 @@ def decompress(message: bytes):
     Shannon-Fano decompress
     Send bytes ONLY!!
 
-    WARNING!!!! DO NOT USE IT WITH DATA > 1 MB
-
     :return: decompressed message bytes
     """
     # 1. Restore alphabet
@@ -77,8 +75,6 @@ def decompress(message: bytes):
             counter += 1
         alphabet[__restore_bits(tmp)] = symb.to_bytes(1, 'big')
 
-    #TODO: optimize asymptotic: ~1MB/min
-    print("hello")
     # 2. Restore message
     tmp = message[counter:]
     msg = __restore_bits(tmp)
@@ -86,7 +82,6 @@ def decompress(message: bytes):
     tmp = ''
     for bit in msg:
         tmp += str(int(bit))
-        # print(tmp)
         if tmp in alphabet:
             restored.append(alphabet[tmp])
             tmp = ''

@@ -1,6 +1,7 @@
 from bitarray import bitarray
 
-def code(message: bytes, mult = 3):
+
+def code(message: bytes, mult=3):
     """
     TODO: do both tests for mult = 3 and mult = 5
 
@@ -13,7 +14,7 @@ def code(message: bytes, mult = 3):
 
     for st in bytes:
         tmp = bin(st)[2:]
-        bits += '0' * (8-len(tmp)) + tmp
+        bits += '0' * (8 - len(tmp)) + tmp
 
     result = ""
     for bit in bits:
@@ -23,19 +24,20 @@ def code(message: bytes, mult = 3):
     return __bitstring_to_bytes(result)
 
 
-def encode(message:bytes, mult = 3):
+def encode(message: bytes, mult=3):
     """
     :param message: input sequence
     :param mult: number of repetitions
     :return: decoded message
     """
-    bits = ''
+    bits = []
     bytes = bytearray(message)
 
-    #Square asymptotic
+    # Square asymptotic
     for st in bytes:
         tmp = bin(st)[2:]
-        bits += '0' * (8 - len(tmp)) + tmp
+        bits.append('0' * (8 - len(tmp)) + tmp)
+    bits = ''.join(bits)
     result = ''
     # print(len(bits))
     for i in range(0, len(bits), mult):
@@ -48,6 +50,7 @@ def encode(message:bytes, mult = 3):
         else:
             result += '0'
     return __bitstring_to_bytes(result)
+
 
 def __bitstring_to_bytes(s):
     return bitarray(s).tobytes()
