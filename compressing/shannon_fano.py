@@ -82,16 +82,16 @@ def decompress(message: bytes):
     # 2. Restore message
     tmp = message[counter:]
     msg = __restore_bits(tmp)
-    restored = b''
+    restored = []
     tmp = ''
     for bit in msg:
         tmp += str(int(bit))
         # print(tmp)
         if tmp in alphabet:
-            restored += alphabet[tmp]
+            restored.append(alphabet[tmp])
             tmp = ''
 
-    return restored
+    return b''.join(restored)
 
 
 def __prepare_bytes(bins):
