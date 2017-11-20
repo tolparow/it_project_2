@@ -48,6 +48,9 @@ def chat_view(request: WSGIRequest, peer_id):
             if msg_text is None:
                 return TemplateResponse(request, 'www/blocks/chat-messages.html', context)
 
+            if 'file' in request.FILES:
+                    clubs_service.add_document(club, request.POST.get('name'), request.FILES['document'])
+
             msg = models.Message(
                 sender=user,
                 receiver=chat.peer,
