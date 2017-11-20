@@ -1,7 +1,13 @@
+{% load static %}
 <div class="row msg-row">
     <div class="flexbox {% if host_user.pk == message.sender.pk %}to{% else %}from{% endif %}">
         <div class="message {% if host_user.pk != message.sender.pk %} from {% else %} to {% endif %}">
             <p>{{ message.text }}</p>
+            {% if message.file %}
+                <a href={{ message.file.url }}>
+                    <div style="height: 65px; margin-bottom: 15px; background-image: url({% static 'img/document.svg' %}); background-position: center bottom 5px; background-size: 60px; background-repeat: no-repeat"></div>
+                </a>
+            {% endif %}
             <span class="msg-time">{{ message.time }}</span>
         </div>
     </div>

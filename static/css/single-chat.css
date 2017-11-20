@@ -66,11 +66,15 @@
     width: 80%;
 }
 
-/*.send-message {*/
-/*width: 100%;*/
-/*position: absolute;*/
-/*bottom: 15px;*/
-/*}*/
+.send-message {
+    /*width: 100%;*/
+    /*position: absolute;*/
+    /*bottom: 15px;*/
+}
+
+.no-bg {
+    background-image: none !important;
+}
 
 .message-entity {
     margin: 15px;
@@ -205,4 +209,11 @@ textarea {
 
 .flexbox.from {
     flex-direction: row;
+}
+
+.file-attached {
+    padding-left: 50px;
+    background-position: center left 10px;
+    background-repeat: no-repeat;
+    background-size: 30px;
 }
