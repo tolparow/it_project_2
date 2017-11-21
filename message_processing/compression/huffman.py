@@ -37,59 +37,26 @@ def bytes_to_bitstring(b):
     return s
 
 
-def compress(path=None, to_be_compressed=None):
+def compress(to_be_compressed=None):
     """
     Compress some file by its path, or
     UTF-8 string, or bytes.
-    :param path: path of file to be compressed. Output file -> path + .huff
     :param to_be_compressed: bytes or UTF-8 string to be compressed output in bytes
-    :return: path of output file, or bytes of encoded what to_be_compressed
+    :return: bytes of encoded what to_be_compressed
     """
-    if path is not None:
-        try:
-            with open(path, 'r') as f:
-                text = f.read()
-        except UnicodeDecodeError:
-            with open(path, 'rb') as f:
-                text = f.read()
-        h = Huffman()
-        compressed = h.compress(text)
-        filename, file_extension = os.path.splitext(path)
-        output_path = filename + ".huff"
-        with open(output_path, 'wb') as output:
-            output.write(compressed)
-        return output_path
-    else:
-        h = Huffman()
-        return h.compress(to_be_compressed)
+    h = Huffman()
+    return h.compress(to_be_compressed)
 
 
-def decompress(path=None, extension=None, compressed=None):
+def decompress(compressed=None):
     """
     Decompress some file by its path, or
     UTF-8 string, or bytes.
-    :param path: path of file to be decompressed. Output file -> name + _decompressed
     :param compressed: bytes to be decompressed in bytes or UTF-8 string
-    :param extension: file extension
     :return: path of output file, or bytes of encoded string or bytes
     """
-    if path is not None:
-        try:
-            with open(path, 'r') as f:
-                text = f.read()
-        except UnicodeDecodeError:
-            with open(path, 'rb') as f:
-                text = f.read()
-        h = Huffman()
-        decompressed = decompress_bytes(text)
-        filename, file_extension = os.path.splitext(path)
-        output_path = filename + "_decompressed" + extension
-        with open(output_path, 'wb') as output:
-            output.write(decompressed)
-        return output_path
-    else:
-        h = Huffman()
-        return decompress_bytes(compressed)
+    h = Huffman()
+    return decompress_bytes(compressed)
 
 
 class HeapNode:
@@ -187,10 +154,10 @@ class Huffman:
         :param text: text from input file
         :return: encoded text
         """
-        encoded = ""
+        encoded = []
         for character in text:
-            encoded += self.codes[character]
-        return encoded
+            encoded.append(self.codes[character])
+        return ''.join(encoded)
 
     def compress(self, text):
         """
@@ -198,7 +165,6 @@ class Huffman:
         :param text: text to be compressed
         :return: compressed bytes
         """
-        t = datetime.now()
         frequency = Huffman.make_frequency_dict(text)
         self.create_tree(frequency)
         self.sum_nodes()
@@ -229,7 +195,6 @@ class Huffman:
         padding_length = 8 - len(codes + encoded_text) % 8
         padding = '' if padding_length == 0 else '0' * (padding_length - 1) + '1'
 
-        print (datetime.now() - t)
         # Concatenate all like this: symbols rlp bytes, codes and their mask, padding, encoded text
         return symbols + bitstring_to_bytes(codes + padding + encoded_text)
 
@@ -240,7 +205,6 @@ def decompress_bytes(compressed_bytes):
     :param compressed_bytes: compressed sequence of bytes
     :return: decompressed bytes
     """
-    t = datetime.now()
 
     # Getting symbols stored and number of bits
     # used to store them.
@@ -278,5 +242,4 @@ def decompress_bytes(compressed_bytes):
             character = codes_to_symbols[current_code]
             decoded_text.append(int.from_bytes(character, 'big'))
             current_code = ''
-    print (datetime.now() - t)
     return decoded_text

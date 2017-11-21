@@ -7,7 +7,7 @@ function sendAJAX(input) {
     if ($(input).val().length > 0 || $(".attachment").val().length > 0) {
         $.ajax({
             type: "POST",
-            data: {message: $(input).val(), file: $(".attachment").val()}
+            data: {message: $(input).val()} //$(".attachment").val()
         });
         $(input).val("");
         $(input).focus();
@@ -53,5 +53,6 @@ $(".attach").click(function () {
 
 $("input[type='file']").change(function () {
     $(input).addClass("file-attached");
-    $(input).removeClass("no-bg")
+    $(input).removeClass("no-bg");
+    $("form").submit();
 });

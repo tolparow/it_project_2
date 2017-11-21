@@ -10,13 +10,13 @@ class Compression(Enum):
 
 
 ext_algo_mapping = {
-    'aiff': Compression.HUFFMAN,
-    'tiff': Compression.LZ78,
+    'aiff': Compression.SF,
+    'tif': Compression.SF,
     'bmp': Compression.SF,
-    'gif': Compression.HUFFMAN,
-    'rtf': Compression.HUFFMAN,
-    'txt': Compression.HUFFMAN,
-    'wav': Compression.HUFFMAN,
+    'gif': Compression.SF,
+    'rtf': Compression.SF,
+    'txt': Compression.SF,
+    'wav': Compression.SF,
 }
 
 

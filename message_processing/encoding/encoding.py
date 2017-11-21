@@ -11,11 +11,11 @@ class Encoding(Enum):
 
 ext_algo_mapping = {
     'aiff': Encoding.REPETITION_3,
-    'tiff': Encoding.REPETITION_3,
+    'tif': Encoding.REPETITION_3,
     'bmp': Encoding.REPETITION_3,
     'gif': Encoding.REPETITION_3,
     'rtf': Encoding.REPETITION_3,
-    'txt': Encoding.REPETITION_3,
+    'txt': Encoding.REPETITION_5,
     'wav': Encoding.REPETITION_3,
 }
 
