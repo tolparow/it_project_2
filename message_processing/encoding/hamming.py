@@ -1,6 +1,6 @@
 import math
 import os
-
+import time
 
 def bitstring_to_bytes(s):
     v = int(s, 2)
@@ -20,12 +20,21 @@ def power_2_below(n):
 
 
 def bytes_to_bitstring(b):
+    """
+        Bytes to bitstring (b'\x01' -> '0001')
+        :param b: bytes
+        :return: bitstring
+    """
     s = ''.join(format(x, '08b') for x in b)
     return s
 
 
 def pre_prepare_bits(bits):
-    leng = len(bits)
+    """
+    this function is oposite of post_prepare_bits, and it's remove meaningless data
+    :param bits: current bits
+    :return: bits with removing meaningless data
+    """
     try:
         while bits[0] == '0':
             bits = bits[1:]
@@ -36,7 +45,11 @@ def pre_prepare_bits(bits):
 
 
 def post_prepare_bits(bits):
-    leng = len(bits)
+    """
+        this function helps to make fully filled bytes
+        :param bits: current bits
+        :return: bits with adding 	meaningless data
+        """
     bits = '1' + bits
     while len(bits) % 8 != 0:
         bits = '0' + bits
@@ -45,9 +58,18 @@ def post_prepare_bits(bits):
 
 class Hamming:
     def covers(self, i, j):
+        """
+        Checks that bit j belongs to parity i
+        :return: True/False
+        """
         return (j >> int(math.log(i, 2))) % 2 == 1
 
     def sum_bits(self, bits, i):
+        """
+        :param bits: current bits sequence
+        :param i: current parity
+        :return:  sum of bits that belongs to parity i
+        """
         if i > len(bits):
             return 0
         else:
@@ -64,6 +86,10 @@ class Hamming:
         return self.sum_bits(bits, i) % 2 == 0
 
     def bits_to_number(self, bits):
+        """
+        :param bits: bits sequence
+        :return: integer for this bits
+        """
         if bits == []:
             return 0
         else:
@@ -71,6 +97,10 @@ class Hamming:
             return n + self.bits_to_number(bits[1:])
 
     def prepare(self, bits):
+        """
+        :param bits: current bits sequence
+        :return: bits sequence with adding free positions for parity bits
+        """
         result = ""
         j = 0
         i = 0
@@ -85,6 +115,11 @@ class Hamming:
         return result
 
     def set_parity_bits(self, bits):
+        """
+        This function calculates the values of parity bits in current sequene
+        :param bits: current bits seuquence
+        :return: sequence of bits with calculated parity bits
+        """
         for i in range(1, len(bits) + 1):
             if is_power_of_two(i):
                 if self.has_odd_parity(bits, i):
@@ -96,32 +131,60 @@ class Hamming:
         return bits
 
     def encode(self, message, is_string=True):
+        """
+        This function encodes the data by hamming code.
+        :param message: Data that this function need to encode
+        :param is_string:
+        :return:encoded data
+        """
         bits = ""
         if is_string:
             bits = bytes_to_bitstring(message)
         else:
             bits = message[:]
-        bits_with_paraties = self.prepare(bits)
-        return bitstring_to_bytes(post_prepare_bits(self.set_parity_bits(bits_with_paraties)))
+        result = ""
+        for i in range(0, len(bits), 8):
+            cur_bits = ""
+            for j in range(8):
+                if i + j < len(bits):
+                    cur_bits += bits[i + j]
+            bits_with_paraties = self.prepare(cur_bits)
+            result += self.set_parity_bits(bits_with_paraties)
+        return bitstring_to_bytes(post_prepare_bits(result))
 
     def decode(self, message, is_string=True):
+        """
+        This function decodes the data that was encoded by Hamming code
+        :param message: Data to be encoded
+        :param is_string:
+        :return: encoded data
+        """
         bits = ""
         if is_string:
             bits = bytes_to_bitstring(message)
         else:
             bits = message[:]
+        result = ""
         bits = pre_prepare_bits(bits)
-        parity_results = self.check_parity(bits, power_2_below(len(bits)))
-        n = self.bits_to_number(parity_results)
-
-        if n != 0:
-            print
-            "NB: bit ", n, " is bad. Flipping."
-            bits[n - 1] = 1 - bits[n - 1]
-
-        return bitstring_to_bytes(self.extract_data(bits))
+        for i in range(0, len(bits), 12):
+            cur_bits = ""
+            for j in range(12):
+                if i + j < len(bits):
+                    cur_bits += bits[i + j]
+            parity_results = self.check_parity(cur_bits, power_2_below(len(cur_bits)))
+            n = self.bits_to_number(parity_results)
+            if n != 0:
+                cur_bits[n - 1] = 1 - cur_bits[n - 1]
+            result += self.extract_data(cur_bits)
+        return bitstring_to_bytes(result)
 
     def extract_data(self, bits):
+        """
+        Extracting data for bits sequence
+        by removing parity bits from sequence
+        :param bits: current bits sequence
+        :return: Result of extracted data
+        """
         result = ""
         for i in range(1, len(bits) + 1):
             if not is_power_of_two(i):
@@ -129,40 +192,14 @@ class Hamming:
         return result
 
     def check_parity(self, bits, i):
+        """
+        This recursive function checks the result of parity bits
+        :param bits: cur bits sequence
+        :param i: index of current bit in bits sequence
+        :return:  returns sum of positions of all incorrect parity bits in this sequence
+        """
         if i == 1:
             return [0] if self.has_odd_parity(bits, i) else [1]
         else:
             bit = 0 if self.has_odd_parity(bits, i) else 1
             return [bit] + self.check_parity(bits, power_2_below(i - 1))
-
-
-def compress(path=None, to_be_compressed=None):
-    if path is not None:
-        with open(path, 'rb') as f:
-            text = f.read()
-        h = Hamming()
-        compressed = h.encode(text)
-        filename, file_extension = os.path.splitext(path)
-        output_path = filename + ".hamm"
-        with open(output_path, 'wb') as output:
-            output.write(compressed)
-        return output_path
-    else:
-        h = Hamming()
-        return h.compress(to_be_compressed)
-
-
-def decompress(path=None, extension=None, compressed=None):
-    if path is not None:
-        with open(path, 'rb') as f:
-            text = f.read()
-        h = Hamming()
-        decompressed = h.decode(text)
-        filename, file_extension = os.path.splitext(path)
-        output_path = filename + "_decompressed" + extension
-        with open(output_path, 'wb') as output:
-            output.write(decompressed)
-        return output_path
-    else:
-        h = Hamming()
-        return h.decode(compressed)
