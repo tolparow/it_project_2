@@ -1,15 +1,67 @@
-from message_processing.message_processor import Encoding
-import importlib
+from enum import Enum
 
-def encode(text: str, file_path: str = None, encoding: Encoding = None):
+from . import golay, hamming, repetition_3, repetition_5
+
+class Encoding(Enum):
+    REPETITION_3 = ('encoding/repetition.py', 3)
+    REPETITION_5 = ('encoding/repetition.py', 5)
+    GOLAY = ('encoding/golay.py', None)
+    HAMMING = ('encoding/hamming.py', None)
+
+
+ext_algo_mapping = {
+    'aiff': Encoding.REPETITION_3,
+    'tiff': Encoding.REPETITION_3,
+    'bmp': Encoding.REPETITION_3,
+    'gif': Encoding.REPETITION_3,
+    'rtf': Encoding.REPETITION_3,
+    'txt': Encoding.REPETITION_3,
+    'wav': Encoding.REPETITION_3,
+}
+
+
+def get_algo_module(file_ext: str = None):
+    # TODO finish comments
     """
 
-    :param text:
-    :param file_path:
+    :param file_ext:
+    :param encoding:
     :return:
     """
-    algo = importlib.import_module(encoding)
-    print(algo)
+    if file_ext is None or file_ext.lower() not in ext_algo_mapping:
+        algo = ext_algo_mapping['txt']
+    else:
+        algo = ext_algo_mapping[file_ext.lower()]
+
+    if algo == Encoding.REPETITION_3:
+        return repetition_3
+    elif algo == Encoding.REPETITION_5:
+        return repetition_5
+    elif algo == Encoding.GOLAY:
+        return golay
+    elif algo == Encoding.HAMMING:
+        return hamming
+    else:
+        raise AttributeError()
 
 
-encode('1', encoding=Encoding.GOLAY)
+def encode(to_encode: bytes, ext: str):
+    """
+
+    :param to_encode:
+    :param ext:
+    :return:
+    """
+
+    return get_algo_module(ext).encode(to_encode)
+
+
+def decode(to_decode: bytes, ext: str):
+    """
+
+    :param to_decode:
+    :param ext:
+    :return:
+    """
+
+    return get_algo_module(ext).decode(to_decode)

@@ -1,18 +1,6 @@
-from enum import Enum
-
-
-class Encoding(Enum):
-    REPETITION_3 = ('encoding/repetition.py', 3)
-    REPETITION_5 = ('encoding/repetition.py', 5)
-    GOLAY = ('encoding/golay.py', None)
-    HAMMING = ('encoding/hamming.py', None)
-
-
-
-class Compression(Enum):
-    LZ78 = 'compression/lz78.py'
-    HUFFMAN = 'huffman.py'
-    SFE = 'compression/sfe.py'
+from message_processing.compression.compression import *
+from message_processing.encoding.encoding import *
+from message_processing.noise import make_some_noise
 
 
 def process_message(text: str, file_path: str = None, noise_rate: float = 0.0,
@@ -34,6 +22,28 @@ def process_message(text: str, file_path: str = None, noise_rate: float = 0.0,
     """
 
     assert (text is None) != (file_path is None), 'Provide either text, or file_path, not both!'
-    assert 0.0 >= noise_rate >= 1.0, 'Noise rate should be in [0.0;1.0]!'
+    #    assert 0.0 >= noise_rate >= 1.0, 'Noise rate should be in [0.0;1.0]!'
+
+    ext = 'txt' if text is not None else file_path.rsplit(1)[-1]
+
+    clear = None
+    if text is not None:
+        clear = bytes(text, 'utf-8')
+    else:
+        with open(file_path, 'rb') as f:
+            clear = f.read()
+
+    compressed = compress(clear, ext)
+
+    encoded = encode(compressed, ext)
+
+    noisy = make_some_noise(encoded, noise_rate)
+
+    decoded = decode(noisy, ext)
+
+    decompressed = decompress(decoded, ext)
+
+    return decompressed
 
 
+# print(process_message('проверка!', noise_rate=0.5))

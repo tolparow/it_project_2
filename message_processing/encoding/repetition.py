@@ -1,7 +1,7 @@
 from bitarray import bitarray
 
 
-def code(message: bytes, mult=3):
+def encode(message: bytes, mult=3):
     """
     TODO: do both tests for mult = 3 and mult = 5
 
@@ -24,7 +24,7 @@ def code(message: bytes, mult=3):
     return __bitstring_to_bytes(result)
 
 
-def encode(message: bytes, mult=3):
+def decode(message: bytes, mult=3):
     """
     :param message: input sequence
     :param mult: number of repetitions

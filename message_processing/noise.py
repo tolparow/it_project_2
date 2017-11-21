@@ -16,7 +16,7 @@ def get_str(file_path):
 
 def make_some_noise(message, noise_level=0.0, is_string=False):
     """
-    add noise to message
+    Add noise to message.
 
     :param message: input data
     :param noise_level: real number in range [0..1]
@@ -24,7 +24,7 @@ def make_some_noise(message, noise_level=0.0, is_string=False):
     :return: noised bytes
     """
     assert (noise_level >= 0 and noise_level <= 1), (
-    "Wrong value of noise_level! " + str(noise_level) + " not in [0;1]  ")
+        "Wrong value of noise_level! " + str(noise_level) + " not in [0;1]  ")
     set_of_bytes = bytearray()
     if is_string:
         set_of_bytes = bytearray(message, 'utf-8')

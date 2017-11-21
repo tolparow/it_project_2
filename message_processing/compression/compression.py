@@ -1,11 +1,18 @@
-from message_processing.message_processor import Compression
-from . import huffman
 from enum import Enum
+
+from . import huffman, lz78, shannon_fano
+
+
+class Compression(Enum):
+    LZ78 = 'compression/lz78.py'
+    HUFFMAN = 'huffman.py'
+    SF = 'compression/sfe.py'
+
 
 ext_algo_mapping = {
     'aiff': Compression.HUFFMAN,
-    'tiff': Compression.HUFFMAN,
-    'bmp': Compression.HUFFMAN,
+    'tiff': Compression.LZ78,
+    'bmp': Compression.SF,
     'gif': Compression.HUFFMAN,
     'rtf': Compression.HUFFMAN,
     'txt': Compression.HUFFMAN,
@@ -28,12 +35,15 @@ def get_algo_module(file_ext: str = None, compression: Compression = None):
 
     if algo == Compression.HUFFMAN:
         return huffman
-    # TODO add more algos when merged
+    elif algo == Compression.LZ78:
+        return lz78
+    elif algo == Compression.SF:
+        return shannon_fano
     else:
-        return None
+        raise AttributeError()
 
 
-def compress(text: str, file_path: str = None, compression: Compression = None):
+def compress(to_compress: bytes, ext: str):
     """
 
     :param text:
@@ -41,10 +51,19 @@ def compress(text: str, file_path: str = None, compression: Compression = None):
     :return:
     """
 
-    assert (text is None) != (file_path is None), 'Provide either text, or file_path, not both!'
+    assert to_compress is not None, 'Provide bytes to compress!'
 
-    ext = 'txt' if text is not None else file_path.rsplit('.', 1)[1]
+    return get_algo_module(ext).compress(to_compress)
 
-    algo = get_algo_module(ext)
 
-    algo.compress(text, file_path)
+def decompress(to_decompress: bytes, ext: str):
+    """
+
+    :param text:
+    :param file_path:
+    :return:
+    """
+
+    assert to_decompress is not None, 'Provide bytes to compress!'
+
+    return get_algo_module(ext).decompress(to_decompress)
