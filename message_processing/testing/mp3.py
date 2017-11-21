@@ -1,3 +1,6 @@
+"""
+This is used for generating statistics.
+"""
 from message_processing.message_processor import process_message
 
 import threading

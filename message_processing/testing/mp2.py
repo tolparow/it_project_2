@@ -1,3 +1,6 @@
+"""
+This is used for generating statistics.
+"""
 from message_processing.message_processor import process_message
 
 import threading
@@ -38,6 +41,7 @@ def f5():
     for i in range(1, 6):
         file_name = 'datasets/TIF/Big/f' + str(i) + '.tif'
         process_message(None, file_path=file_name, noise_rate=0.00)
+
 
 #
 # # init threads
