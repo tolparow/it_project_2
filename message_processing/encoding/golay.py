@@ -101,7 +101,6 @@ def decode_12(string_bits_12, encoding_parameters):
 # alt name for the decode function for consistency with hamming decoding
 decode_golay_12 = decode
 
-
 initial_bits = b''
 
 

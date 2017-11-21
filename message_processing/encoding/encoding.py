@@ -2,6 +2,7 @@ from enum import Enum
 
 from . import golay, hamming, repetition_3, repetition_5
 
+
 class Encoding(Enum):
     REPETITION_3 = ('encoding/repetition.py', 3)
     REPETITION_5 = ('encoding/repetition.py', 5)

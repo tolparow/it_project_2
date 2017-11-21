@@ -21,7 +21,7 @@ def compress(uncompressed):
 
     # Build the dictionary
     dictionary_size = 256
-    
+
     dictionary = dict((bytes([i]), bytes([i])) for i in range(dictionary_size))
 
     # Applying compression algorithm
@@ -39,7 +39,7 @@ def compress(uncompressed):
 
     if single_byte:
         compressed.append(dictionary[single_byte])
-        
+
     return rlp.encode(compressed)
 
 
@@ -47,7 +47,7 @@ def decompress(compressed):
     """Decompress a list of bytes to original string of bytes"""
 
     compressed = rlp.decode(compressed)
-    
+
     # Build the dictionary of integers, as.
     dictionary_size = 256
     dictionary = dict((i, i) for i in range(dictionary_size))
@@ -60,7 +60,8 @@ def decompress(compressed):
         if isinstance(list_entry, bytes):
             list_entry = int.from_bytes(list_entry, 'big')
         if list_entry in dictionary:
-            entry = bytes([dictionary[list_entry]]) if isinstance(dictionary[list_entry], int) else dictionary[list_entry]
+            entry = bytes([dictionary[list_entry]]) if isinstance(dictionary[list_entry], int) else dictionary[
+                list_entry]
         elif list_entry == dictionary_size:
             entry = single_byte + bytes([single_byte[0]])
         else:
