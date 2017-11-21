@@ -2,6 +2,7 @@ import math
 import os
 import time
 
+
 def bitstring_to_bytes(s):
     v = int(s, 2)
     b = bytearray()

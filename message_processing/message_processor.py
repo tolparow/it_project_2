@@ -35,7 +35,7 @@ def process_message(text: str, file_path: str = None, noise_rate: float = 0.0,
         with open(file_path, 'rb') as f:
             clear = f.read()
 
-    s = '{} {} {} {} '.format(ext, c_algs[ext].name, e_algs[ext].name,  len(clear))
+    s = '{} {} {} {} '.format(ext, c_algs[ext].name, e_algs[ext].name, len(clear))
 
     t = datetime.datetime.now().timestamp()
     compressed = compress(clear, ext)
@@ -65,26 +65,3 @@ def process_message(text: str, file_path: str = None, noise_rate: float = 0.0,
     print(s)
 
     return decompressed
-
-#
-# print(process_message(open(), noise_rate=0.05).decode('utf-8', errors='replace'))
-#
-# for i in range(1, 6):
-#     file_name = 'datasets/BMP/Big/f' + str(i) + '.bmp'
-#     process_message(None, file_path=file_name, noise_rate=0.00)
-#
-# for i in range(1, 6):
-#     file_name = 'datasets/WAV/Big/f' + str(i) + '.wav'
-#     process_message(None, file_path=file_name, noise_rate=0.00)
-#
-# for i in range(1, 6):
-#     file_name = 'datasets/GIF/Big/f' + str(i) + '.gif'
-#     process_message(None, file_path=file_name, noise_rate=0.00)
-#
-# for i in range(1, 6):
-#     file_name = 'datasets/RTF/Big/f' + str(i) + '.rtf'
-#     process_message(None, file_path=file_name, noise_rate=0.00)
-#
-# for i in range(1, 6):
-#     file_name = 'datasets/TIF/Big/f' + str(i) + '.tif'
-#     process_message(None, file_path=file_name, noise_rate=0.00)
