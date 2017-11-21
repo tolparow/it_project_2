@@ -1,3 +1,6 @@
+media
+message_processing/datasets
+
 db.sqlite3
 it_project_2/settings.py
 configs
